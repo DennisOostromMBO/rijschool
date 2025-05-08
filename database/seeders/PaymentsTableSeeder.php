@@ -1,0 +1,25 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class PaymentsTableSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('payments')->insert([
+            [
+                'invoice_id' => 1,
+                'date' => now(),
+                'status' => 'Completed',
+                'is_active' => true,
+                'remark' => 'Full payment received',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // ...add more records as needed...
+        ]);
+    }
+}
