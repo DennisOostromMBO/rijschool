@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure testimonial-item has proper light mode styles */
+.testimonial-item {
+    background-color: #ffffff; /* Light background for light mode */
+    color: #1e293b; /* Dark text for light mode */
+}
+
+.dark .testimonial-item {
+    background-color: var(--dark-bg); /* Dark background for dark mode */
+    color: var(--accent-color); /* Accent text for dark mode */
+}
+
+/* Ensure testimonials-slider items have proper light mode styles */
+#testimonials-slider .testimonial-item {
+    background-color: #ffffff; /* Light background for light mode */
+    color: #1e293b; /* Dark text for light mode */
+}
+
+.dark #testimonials-slider .testimonial-item {
+    background-color: var(--dark-bg); /* Dark background for dark mode */
+    color: var(--accent-color); /* Accent text for dark mode */
+}
