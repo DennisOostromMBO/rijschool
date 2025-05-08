@@ -18,7 +18,14 @@ class StudentsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more students as needed...
+            [
+                'user_id' => 2,
+                'relation_number' => 'REL67890',
+                'is_active' => true,
+                'remark' => 'Second student',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -22,11 +22,25 @@ class UsersTableSeeder extends Seeder
                 'logged_in_at' => null,
                 'logged_out_at' => null,
                 'is_active' => true,
-                'remark' => 'Test user',
+                'remark' => 'Test user 1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more users as needed...
+            [
+                'first_name' => 'Jane',
+                'middle_name' => null,
+                'last_name' => 'Smith',
+                'birth_date' => '1995-05-15',
+                'username' => 'janesmith',
+                'password' => Hash::make('password123'),
+                'is_logged_in' => false,
+                'logged_in_at' => null,
+                'logged_out_at' => null,
+                'is_active' => true,
+                'remark' => 'Test user 2',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

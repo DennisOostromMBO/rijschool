@@ -21,7 +21,17 @@ class NotificationsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more notifications as needed...
+            [
+                'user_id' => 2,
+                'target_group' => 'Instructor',
+                'message' => 'New lesson assigned',
+                'notification_type' => 'LessonAssignment',
+                'date' => now(),
+                'is_active' => true,
+                'remark' => 'Informative notification',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

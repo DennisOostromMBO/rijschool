@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-           
+            UsersTableSeeder::class, // Ensure users are seeded first
             RolesTableSeeder::class,
             ContactsTableSeeder::class,
             StudentsTableSeeder::class,
@@ -45,7 +45,6 @@ class DatabaseSeeder extends Seeder
             ExamsTableSeeder::class,
             InvoicesTableSeeder::class,
             PaymentsTableSeeder::class,
-            UsersTableSeeder::class,
         ]);
     }
 }

@@ -27,7 +27,23 @@ class LessonsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more lessons as needed...
+            [
+                'registration_id' => 2,
+                'instructor_id' => 2,
+                'car_id' => 2,
+                'start_date' => now()->addDays(1),
+                'start_time' => '14:00:00',
+                'end_date' => now()->addDays(1),
+                'end_time' => '15:00:00',
+                'lesson_status' => 'Scheduled',
+                'goal' => 'Highway driving',
+                'student_comment' => 'Excited to learn',
+                'instructor_comment' => 'Focus on merging',
+                'is_active' => true,
+                'remark' => 'Afternoon session',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

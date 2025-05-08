@@ -21,7 +21,17 @@ class PickupAddressesTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more pickup addresses as needed...
+            [
+                'street_name' => 'Oak Avenue',
+                'house_number' => '789',
+                'addition' => null,
+                'postal_code' => '1234EF',
+                'city' => 'Amsterdam',
+                'is_active' => true,
+                'remark' => 'Primary pickup location',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

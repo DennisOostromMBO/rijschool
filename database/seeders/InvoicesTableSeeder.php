@@ -23,7 +23,19 @@ class InvoicesTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more records as needed...
+            [
+                'registration_id' => 2,
+                'invoice_number' => 'INV-0002',
+                'invoice_date' => now()->subDays(10),
+                'amount_excl_vat' => 1000.00,
+                'vat' => 21.00,
+                'amount_incl_vat' => 1210.00,
+                'invoice_status' => 'Pending',
+                'is_active' => true,
+                'remark' => 'Second invoice',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

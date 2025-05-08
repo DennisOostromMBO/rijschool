@@ -20,7 +20,16 @@ class RegistrationsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more registrations as needed...
+            [
+                'student_id' => 2,
+                'package_id' => 2,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(3),
+                'is_active' => true,
+                'remark' => 'Second registration',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

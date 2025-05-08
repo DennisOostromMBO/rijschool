@@ -18,7 +18,14 @@ class InstructorsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more instructors as needed...
+            [
+                'user_id' => 2,
+                'number' => 'INST002',
+                'is_active' => true,
+                'remark' => 'Backup instructor',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -19,7 +19,15 @@ class PaymentsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more records as needed...
+            [
+                'invoice_id' => 2,
+                'date' => now()->subDays(5),
+                'status' => 'Pending',
+                'is_active' => true,
+                'remark' => 'Partial payment pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

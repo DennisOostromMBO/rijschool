@@ -18,7 +18,14 @@ class RolesTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more roles as needed...
+            [
+                'user_id' => 2,
+                'name' => 'Instructor',
+                'is_active' => true,
+                'remark' => 'Instructor role',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

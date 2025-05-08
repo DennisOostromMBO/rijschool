@@ -20,7 +20,16 @@ class CarsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more cars as needed...
+            [
+                'brand' => 'Tesla',
+                'type' => 'Model 3',
+                'license_plate' => 'EF-456-GH',
+                'fuel' => 'Electric',
+                'is_active' => true,
+                'remark' => 'Secondary car',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

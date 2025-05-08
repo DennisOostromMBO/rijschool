@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('target_group', ['Student', 'Instructor', 'Both']);
             $table->text('message');
-            $table->enum('notification_type', ['Sick', 'LessonChange', 'LessonCancellation', 'PickupAddressChange', 'LessonGoalChange']);
+            $table->enum('notification_type', ['Sick', 'LessonChange', 'LessonCancellation', 'PickupAddressChange', 'LessonGoalChange', 'LessonAssignment']);
             $table->date('date');
             $table->boolean('is_active')->default(true);
             $table->text('remark')->nullable();

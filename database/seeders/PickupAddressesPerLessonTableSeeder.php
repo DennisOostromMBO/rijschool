@@ -18,6 +18,14 @@ class PickupAddressesPerLessonTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'lesson_id' => 1,
+                'pickup_address_id' => 2,
+                'is_active' => true,
+                'remark' => 'Secondary pickup address for lesson',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
             // ...add more records as needed...
         ]);
     }

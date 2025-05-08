@@ -24,7 +24,20 @@ class ExamsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more records as needed...
+            [
+                'registration_id' => 2,
+                'instructor_id' => 2,
+                'start_date' => now()->addDays(7),
+                'start_time' => '13:00:00',
+                'end_date' => now()->addDays(7),
+                'end_time' => '14:00:00',
+                'location' => 'Exam Center B',
+                'result' => 'Failed',
+                'is_active' => true,
+                'comment' => 'Second exam attempt',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

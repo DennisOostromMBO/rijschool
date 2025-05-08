@@ -18,13 +18,26 @@ class ContactsTableSeeder extends Seeder
                 'postal_code' => '1234AB',
                 'city' => 'Amsterdam',
                 'mobile' => '0612345678',
-                'email' => 'contact@example.com',
+                'email' => 'contact1@example.com',
                 'is_active' => true,
                 'remark' => 'Primary contact',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // ...add more contacts as needed...
+            [
+                'user_id' => 2,
+                'street_name' => 'Second Avenue',
+                'house_number' => '456',
+                'addition' => null,
+                'postal_code' => '5678CD',
+                'city' => 'Rotterdam',
+                'mobile' => '0687654321',
+                'email' => 'contact2@example.com',
+                'is_active' => true,
+                'remark' => 'Secondary contact',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
