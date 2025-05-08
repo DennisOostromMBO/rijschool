@@ -17,4 +17,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Include individual team member route files
+require __DIR__.'/wassimroutes.php';  // Accounts and notifications
+require __DIR__.'/dennisroutes.php';  // Student and instructor
+require __DIR__.'/mahdiroutes.php';   // Car, bundles, and planning
+require __DIR__.'/danielroutes.php';  // Invoices and payment
+
 require __DIR__.'/auth.php';
