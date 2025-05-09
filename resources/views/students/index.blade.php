@@ -9,20 +9,26 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-7xl">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Overzicht Leerlingen</h1>
-            <a href="#" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
-                ➕ Voeg Leerling Toe
-            </a>
-        </div>
-
-        <!-- Geen gegevens beschikbaar -->
-        @if (empty($students))
-            <div class="text-center text-red-500 font-semibold">
-                <p>Momenteel geen leerlinggegevens beschikbaar.</p>
+        @if (!empty($students))
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Overzicht Leerlingen</h1>
+                <a href="#" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
+                    ➕ Voeg Leerling Toe
+                </a>
             </div>
         @else
-            <!-- Tabel voor grotere schermen -->
+            <div class="flex flex-col items-center justify-center text-center text-red-500 font-semibold mt-32 mb-10">
+                <p class="text-4xl">Geen leerlinggegevens beschikbaar</p>
+            </div>
+            <div class="flex justify-center">
+                <a href="#" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 inline-flex items-center">
+                    ➕ Voeg Leerling Toe
+                </a>
+            </div>
+        @endif
+
+        <!-- Tabel voor grotere schermen -->
+        @if (!empty($students))
             <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full table-auto border-collapse border border-gray-200">
                     <thead>
