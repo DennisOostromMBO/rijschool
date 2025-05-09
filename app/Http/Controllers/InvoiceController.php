@@ -10,32 +10,31 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // Import the PDF facade from Laravel DomPDF
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class InvoiceController extends Controller
 {
     /**
      * Display a listing of the invoices.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Invoice::with(['student.user']);
+        // Call the stored procedure via the model
+        $invoices = collect(Invoice::getInvoicesFromSP()); // Convert array to collection
 
-        // Apply filters if provided
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
+        // Manually paginate the collection
+        $currentPage = request()->get('page', 1); // Get the current page or default to 1
+        $perPage = 10; // Number of items per page
+        $paginatedInvoices = new LengthAwarePaginator(
+            $invoices->forPage($currentPage, $perPage), // Slice the collection for the current page
+            $invoices->count(), // Total items
+            $perPage, // Items per page
+            $currentPage, // Current page
+            ['path' => request()->url(), 'query' => request()->query()] // Preserve query parameters
+        );
 
-        if ($request->has('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->has('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        $invoices = $query->orderBy('created_at', 'desc')->paginate(15);
-
-        return view('invoices.index', compact('invoices'));
+        return view('invoices.index', ['invoices' => $paginatedInvoices]);
     }
 
     /**
