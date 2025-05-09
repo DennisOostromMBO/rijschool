@@ -83,9 +83,16 @@ class InvoiceController extends Controller
     /**
      * Display the specified invoice.
      */
-    public function show(Invoice $invoice)
+    public function show($id)
     {
-        $invoice->load(['student.user', 'registration.package']);
+        // Call the stored procedure and filter the result for the specific invoice
+        $invoices = collect(Invoice::getInvoicesFromSP());
+        $invoice = $invoices->firstWhere('id', $id);
+
+        if (!$invoice) {
+            abort(404, 'Factuur niet gevonden.');
+        }
+
         return view('invoices.show', compact('invoice'));
     }
 

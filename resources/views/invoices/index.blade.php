@@ -55,6 +55,7 @@
             <table class="min-w-full bg-white dark:bg-gray-800">
                 <thead>
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Factuurnummer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Datum</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
@@ -65,6 +66,9 @@
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse ($invoices as $invoice)
                         <tr>
+                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                                {{ $invoice->invoice_number }}
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
                                 {{ $invoice->student_name ?? 'Onbekend' }}
                             </td>
@@ -92,7 +96,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen facturen gevonden.</td>
+                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen facturen gevonden.</td>
                         </tr>
                     @endforelse
                 </tbody>

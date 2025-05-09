@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Invoice extends Model
 {
@@ -72,5 +73,15 @@ class Invoice extends Model
     public function remainingAmount()
     {
         return $this->amount_incl_vat - $this->totalPaid();
+    }
+
+    /**
+     * Call the stored procedure to get invoices.
+     *
+     * @return array
+     */
+    public static function getInvoicesFromSP()
+    {
+        return DB::select('CALL GetInvoices()');
     }
 }
