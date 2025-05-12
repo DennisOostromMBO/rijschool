@@ -10,12 +10,54 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the users.
+     * Display a listing of the users with search and filtering capabilities.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('role')->paginate(10);
-        return view('accounts.index', compact('users'));
+        $query = User::with('roles');
+
+        // Zoeken op naam of gebruikersnaam
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('first_name', 'LIKE', $searchTerm)
+                  ->orWhere('last_name', 'LIKE', $searchTerm)
+                  ->orWhere('username', 'LIKE', $searchTerm);
+            });
+        }
+
+        // Filteren op rol
+        if ($request->has('role') && !empty($request->role)) {
+            $query->whereHas('roles', function($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        // Sorteren
+        $sortField = $request->sort_by ?? 'id';
+        $sortDirection = $request->sort_direction ?? 'asc';
+        $allowedSortFields = ['id', 'first_name', 'username', 'created_at'];
+
+        if (in_array($sortField, $allowedSortFields)) {
+            $query->orderBy($sortField, $sortDirection);
+        } else {
+            $query->orderBy('id', 'asc');
+        }
+
+        // Pagineren met behoud van query parameters
+        $perPage = $request->per_page ?? 10;
+        $allowedPerPage = [10, 25, 50, 100];
+
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 10;
+        }
+
+        $users = $query->paginate($perPage)->withQueryString();
+
+        // Haal alle unieke rolnamen op voor het filter
+        $roles = \App\Models\Role::select('name')->distinct()->pluck('name');
+
+        return view('account.index', compact('users', 'roles'));
     }
 
     /**
@@ -23,7 +65,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('accounts.create');
+        return view('account.create');
     }
 
     /**
@@ -54,7 +96,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('accounts.show', compact('user'));
+        return view('account.show', compact('user'));
     }
 
     /**
@@ -62,7 +104,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('accounts.edit', compact('user'));
+        return view('account.edit', compact('user'));
     }
 
     /**

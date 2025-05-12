@@ -13,10 +13,53 @@
                 </div>
             </div>
             <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                {{ $authButtons ?? '' }}
+                <!-- Authentication Dropdown -->
+                @auth
+                <div class="ml-3 relative" x-data="{ open: false }" @click.away="open = false">
+                    <div>
+                        <button @click="open = !open" class="flex items-center text-sm font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none transition duration-150 ease-in-out">
+                            <span class="mr-1">Hallo, {{ Auth::user()->full_name }}</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Dropdown menu, show/hide based on menu state -->
+                    <div x-show="open"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                         role="menu"
+                         aria-orientation="vertical"
+                         aria-labelledby="user-menu"
+                         style="display: none;">
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">Profiel</a>
+                        <a href="{{ route('profile.settings') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">Instellingen</a>
+                        @if(Auth::user()->roles->pluck('name')->contains('Admin'))
+                            <a href="{{ route('accounts.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">Accounts beheren</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" role="menuitem">
+                                Uitloggen
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @else
+                    <!-- Authentication Links for guests -->
+                    <a href="{{ route('login') }}" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">Inloggen</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">Registreren</a>
+                    @endif
+                @endauth
 
                 @if($darkMode)
-                <div class="flex items-center">
+                <div class="flex items-center ml-3">
                     <button id="theme-toggle" class="p-2 rounded-md text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">
                         <span id="theme-toggle-icon" class="sr-only">Toggle theme</span>
                         <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,9 +86,59 @@
 
     <!-- Mobile menu, show/hide based on menu state -->
     <div class="sm:hidden hidden" id="mobile-menu">
-        {{ $mobileMenu ?? '' }}
+        <div class="pt-2 pb-3 space-y-1">
+            {{ $mobileMenu ?? '' }}
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+            @auth
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                            {{ substr(Auth::user()->first_name, 0, 1) }}
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ Auth::user()->username }}</div>
+                    </div>
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Profiel
+                    </a>
+                    <a href="{{ route('profile.settings') }}" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Instellingen
+                    </a>
+                    @if(Auth::user()->roles->pluck('name')->contains('Admin'))
+                        <a href="{{ route('accounts.index') }}" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Accounts beheren
+                        </a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Uitloggen
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="mt-3 space-y-1">
+                    <a href="{{ route('login') }}" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Inloggen
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Registreren
+                        </a>
+                    @endif
+                </div>
+            @endauth
+        </div>
     </div>
 </nav>
+
+@pushOnce('scripts')
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+@endPushOnce
 
 @if($darkMode)
 <script>

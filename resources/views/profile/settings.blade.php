@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profiel - Rijschool Vierkante Wielen</title>
+    <title>Instellingen - Rijschool Vierkante Wielen</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css'])
     @else
@@ -103,20 +103,64 @@
     </x-navbar>
     <div class="py-16 bg-gray-100 dark:bg-slate-900 min-h-screen">
         <div class="max-w-3xl mx-auto space-y-8">
-            <h2 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-8 text-center">Profiel</h2>
+            <h2 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-8 text-center">Instellingen</h2>
             <div class="card">
                 <div class="card-body">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    @include('profile.partials.delete-user-form')
+                    <section>
+                        <header>
+                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                {{ __('Application Settings') }}
+                            </h2>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                {{ __('Manage your application preferences and settings.') }}
+                            </p>
+                        </header>
+                        <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+                            @csrf
+                            @method('patch')
+                            <div>
+                                <x-input-label for="theme_preference" :value="__('Theme Preference')" />
+                                <select id="theme_preference" name="theme_preference" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                    <option value="system">System Default</option>
+                                    <option value="light">Light Mode</option>
+                                    <option value="dark">Dark Mode</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('theme_preference')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="notifications_enabled" :value="__('Email Notifications')" />
+                                <div class="mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="notifications_enabled" name="notifications_enabled" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" />
+                                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Enable email notifications</span>
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('notifications_enabled')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="language" :value="__('Language')" />
+                                <select id="language" name="language" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                    <option value="en">English</option>
+                                    <option value="nl">Dutch</option>
+                                    <option value="de">German</option>
+                                    <option value="fr">French</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('language')" class="mt-2" />
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <x-primary-button>{{ __('Save') }}</x-primary-button>
+                                @if (session('status') === 'settings-updated')
+                                    <p
+                                        x-data="{ show: true }"
+                                        x-show="show"
+                                        x-transition
+                                        x-init="setTimeout(() => show = false, 2000)"
+                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                    >{{ __('Saved.') }}</p>
+                                @endif
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </div>
         </div>

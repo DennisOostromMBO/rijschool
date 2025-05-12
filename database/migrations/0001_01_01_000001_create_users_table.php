@@ -25,8 +25,10 @@ return new class extends Migration
             $table->timestamp('logged_out_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->text('remark')->nullable();
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

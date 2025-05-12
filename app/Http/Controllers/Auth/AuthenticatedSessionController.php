@@ -36,6 +36,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Update the user's login status before logging out
+        if (Auth::check()) {
+            Auth::user()->update([
+                'is_logged_in' => false,
+                'logged_out_at' => now(),
+            ]);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

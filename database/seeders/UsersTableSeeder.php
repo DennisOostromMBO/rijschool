@@ -41,6 +41,21 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'first_name' => 'Alice',
+                'middle_name' => null,
+                'last_name' => 'Johnson',
+                'birth_date' => '2000-09-10',
+                'username' => 'alicejohnson',
+                'password' => Hash::make('studentpass'),
+                'is_logged_in' => false,
+                'logged_in_at' => null,
+                'logged_out_at' => null,
+                'is_active' => true,
+                'remark' => 'Student user',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
