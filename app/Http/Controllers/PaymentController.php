@@ -15,7 +15,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Payment::with(['invoice', 'student.user']);
+        $query = Payment::with(['invoice', 'invoice.registration']);
 
         // Apply filters if provided
         if ($request->has('payment_method')) {
@@ -23,14 +23,23 @@ class PaymentController extends Controller
         }
 
         if ($request->has('date_from')) {
-            $query->whereDate('payment_date', '>=', $request->date_from);
+            $query->whereHas('invoice', function ($q) use ($request) {
+                $q->whereDate('invoice_date', '>=', $request->date_from);
+            });
         }
 
         if ($request->has('date_to')) {
-            $query->whereDate('payment_date', '<=', $request->date_to);
+            $query->whereHas('invoice', function ($q) use ($request) {
+                $q->whereDate('invoice_date', '<=', $request->date_to);
+            });
         }
 
-        $payments = $query->orderBy('payment_date', 'desc')->paginate(15);
+        // Sort by invoice_date using whereHas
+        $query->whereHas('invoice', function ($q) {
+            $q->orderBy('invoice_date', 'desc');
+        });
+
+        $payments = $query->paginate(15);
 
         return view('payments.index', compact('payments'));
     }

@@ -17,9 +17,7 @@
             <table class="min-w-full bg-white dark:bg-gray-800">
                 <thead>
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Betalingsnummer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Betaler</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Betalingsdatum</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Factuurnummer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Factuurdatum</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
@@ -30,33 +28,27 @@
                     @forelse ($payments as $payment)
                         <tr>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ $payment->payment_number }}
+                                {{ $payment->invoice->registration->student->user->name ?? 'Onbekend' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ $payment->payer_name ?? 'Onbekend' }}
+                                {{ $payment->invoice->invoice_number ?? 'Onbekend' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ $payment->invoice_id }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ \Carbon\Carbon::parse($payment->invoice_date)->format('d M Y') }}
+                                {{ $payment->invoice->invoice_date ? \Carbon\Carbon::parse($payment->invoice->invoice_date)->format('d M Y') : 'Onbekend' }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
-                                    {{ $payment->payment_status === 'Completed' ? 'bg-green-100 text-green-800' : ($payment->payment_status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                                    {{ ucfirst($payment->payment_status) }}
+                                    {{ $payment->status === 'Completed' ? 'bg-green-100 text-green-800' : ($payment->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                                    {{ ucfirst($payment->status ?? 'Onbekend') }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                €{{ number_format($payment->amount, 2) }}
+                                €{{ number_format($payment->invoice->amount_incl_vat ?? 0, 2) }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen betalingen gevonden.</td>
+                            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen betalingen gevonden.</td>
                         </tr>
                     @endforelse
                 </tbody>
