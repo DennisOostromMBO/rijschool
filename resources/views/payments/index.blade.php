@@ -28,7 +28,7 @@
                     @forelse ($payments as $payment)
                         <tr>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                {{ $payment->invoice->registration->student->user->name ?? 'Onbekend' }}
+                                {{ $payment->invoice->registration->student->user->full_name ?? 'Onbekend' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
                                 {{ $payment->invoice->invoice_number ?? 'Onbekend' }}
@@ -53,6 +53,11 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-6">
+            {{ $payments->links('pagination::tailwind') }}
         </div>
     </div>
 </x-layouts.app>

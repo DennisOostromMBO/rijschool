@@ -32,19 +32,11 @@ class Payment extends Model
     }
 
     /**
-     * Get the student that this payment is from through the invoice and registration.
+     * Get the user (payer) through the related models.
      */
-    public function student()
+    public function user()
     {
-        return $this->invoice->student();
-    }
-
-    /**
-     * Check if the payment is completed.
-     */
-    public function isCompleted()
-    {
-        return $this->status === 'completed';
+        return $this->invoice->registration->student->user ?? null;
     }
 
     /**
