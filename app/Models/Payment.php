@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Payment extends Model
 {
@@ -44,5 +45,13 @@ class Payment extends Model
     public function isCompleted()
     {
         return $this->status === 'completed';
+    }
+
+    /**
+     * Get payments using the stored procedure.
+     */
+    public static function getPaymentsFromSP()
+    {
+        return DB::select('CALL GetPayments()');
     }
 }
