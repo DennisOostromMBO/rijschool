@@ -3,16 +3,16 @@ DROP PROCEDURE IF EXISTS GetPayments;
 CREATE PROCEDURE GetPayments()
 BEGIN
     SELECT 
-        payments.id,
-        payments.payment_number,
-        payments.payment_date,
-        payments.amount,
-        payments.payment_status,
-        payments.invoice_id, 
-        invoices.invoice_date, 
-        users.full_name AS payer_name
+        payments.id AS payment_id,
+        invoices.invoice_number,
+        invoices.invoice_date,
+        invoices.amount_incl_vat,
+        payments.status AS payment_status,
+        users.Full_name AS payer_name -- Changed from full_name to name for consistency
     FROM payments
     JOIN invoices ON payments.invoice_id = invoices.id
-    JOIN users ON invoices.registration_id = users.id
-    ORDER BY payments.payment_date DESC;
+    JOIN registrations ON invoices.registration_id = registrations.id
+    JOIN students ON registrations.student_id = students.id
+    JOIN users ON students.user_id = users.id
+    ORDER BY invoices.invoice_date DESC;
 END;
