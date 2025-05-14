@@ -15,33 +15,14 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Payment::with(['invoice', 'invoice.registration']);
+        // Retrieve payments with related data
+        $payments = Payment::with(['invoice.registration.student.user'])->paginate(15);
 
-        // Apply filters if provided
-        if ($request->has('payment_method')) {
-            $query->where('payment_method', $request->payment_method);
-        }
+        // Calculate summary data
+        $paidCount = Payment::where('status', 'Completed')->count();
+        $inProgressCount = Payment::whereIn('status', ['Pending', 'Not Paid'])->count();
 
-        if ($request->has('date_from')) {
-            $query->whereHas('invoice', function ($q) use ($request) {
-                $q->whereDate('invoice_date', '>=', $request->date_from);
-            });
-        }
-
-        if ($request->has('date_to')) {
-            $query->whereHas('invoice', function ($q) use ($request) {
-                $q->whereDate('invoice_date', '<=', $request->date_to);
-            });
-        }
-
-        // Sort by invoice_date using whereHas
-        $query->whereHas('invoice', function ($q) {
-            $q->orderBy('invoice_date', 'desc');
-        });
-
-        $payments = $query->paginate(15);
-
-        return view('payments.index', compact('payments'));
+        return view('payments.index', compact('payments', 'paidCount', 'inProgressCount'));
     }
 
     /**

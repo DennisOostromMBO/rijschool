@@ -13,6 +13,19 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Betalingen Overzicht</h1>
 
+        <!-- Summary Section -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Betaald</h2>
+                <p class="text-2xl font-bold text-green-600">{{ $paidCount }}</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">In Behandeling / Niet Betaald</h2>
+                <p class="text-2xl font-bold text-yellow-600">{{ $inProgressCount }}</p>
+            </div>
+        </div>
+
+        <!-- Payments Table -->
         <div class="overflow-hidden shadow rounded-lg">
             <table class="min-w-full bg-white dark:bg-gray-800">
                 <thead>
