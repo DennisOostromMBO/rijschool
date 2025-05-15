@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,31 +11,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'first_name' => 'Test',
-            'middle_name' => null,
-            'last_name' => 'User',
-            'birth_date' => '1990-01-01',
-            'username' => 'testuser',
-            'password' => bcrypt('password123'),
-            'is_logged_in' => false,
-            'logged_in_at' => null,
-            'logged_out_at' => null,
-            'is_active' => true,
-            'remark' => 'Seeder test user',
-        ]);
-
         $this->call([
-            UsersTableSeeder::class, // Ensure users are seeded first
-            RolesTableSeeder::class, // Seed roles
-            RoleUserTableSeeder::class, // Connect users with roles
-            FixUserRolesSeeder::class, // Fix direct role_id values
+            // Core data
+            UsersTableSeeder::class,       // Create basic users
+            RolesTableSeeder::class,       // Define available roles
+            RoleUserTableSeeder::class,    // Connect users with roles
+            EnsureRoleAssignmentsSeeder::class, // Extra safety to guarantee role assignments
+
+            // User-related data
             ContactsTableSeeder::class,
             StudentsTableSeeder::class,
             InstructorsTableSeeder::class,
-            NotificationsTableSeeder::class,
+
+            // Business logic data
             CarsTableSeeder::class,
             PackagesTableSeeder::class,
             RegistrationsTableSeeder::class,
@@ -45,8 +31,13 @@ class DatabaseSeeder extends Seeder
             PickupAddressesTableSeeder::class,
             PickupAddressesPerLessonTableSeeder::class,
             ExamsTableSeeder::class,
+
+            // Financial data
             InvoicesTableSeeder::class,
             PaymentsTableSeeder::class,
+
+            // Notifications
+            NotificationsTableSeeder::class,
         ]);
     }
 }
