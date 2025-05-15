@@ -31,7 +31,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UsersTableSeeder::class, // Ensure users are seeded first
-            RolesTableSeeder::class,
+            RolesTableSeeder::class, // Seed roles
+            RoleUserTableSeeder::class, // Connect users with roles
+            FixUserRolesSeeder::class, // Fix direct role_id values
             ContactsTableSeeder::class,
             StudentsTableSeeder::class,
             InstructorsTableSeeder::class,

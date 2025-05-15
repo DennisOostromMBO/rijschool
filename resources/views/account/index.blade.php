@@ -13,15 +13,30 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Hulp bij het gebruik van deze pagina</h3>
+                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Gebruiksaanwijzing - Account Overzicht</h3>
                 <div class="mt-2 text-sm text-blue-700 dark:text-blue-200">
-                    <p>Op deze pagina kunt u alle gebruikersaccounts beheren. U kunt:</p>
-                    <ul class="list-disc list-inside mt-1 pl-2">
-                        <li>Zoeken op naam of gebruikersnaam met het zoekvak</li>
-                        <li>Filteren op specifieke rollen met het rolfilter</li>
-                        <li>Sorteren door op de kolomkoppen te klikken</li>
-                        <li>Het aantal items per pagina aanpassen</li>
-                    </ul>
+                    <p class="font-semibold mb-1">Op deze pagina kunt u alle gebruikersaccounts beheren:</p>
+                    <ol class="list-decimal list-inside mt-1 pl-2 space-y-2">
+                        <li><span class="font-semibold">Zoeken:</span> Vul een naam of gebruikersnaam in het zoekvak in en klik op de blauwe 'Zoeken' knop.</li>
+                        <li><span class="font-semibold">Filteren op rol:</span> Selecteer een rol (Admin, Student, Instructeur) in het dropdown menu om alleen die gebruikers te zien.</li>
+                        <li><span class="font-semibold">Sorteren:</span> Klik op een kolomheader ('#', 'Naam', 'Gebruikersnaam') om te sorteren. Klik nogmaals om de sorteervolgorde om te draaien.</li>
+                        <li><span class="font-semibold">Aantal resultaten:</span> Kies hoeveel gebruikers u per pagina wilt zien via 'Items per pagina'.</li>
+                        <li><span class="font-semibold">Acties:</span>
+                            <ul class="list-disc list-inside pl-4 mt-1">
+                                <li><span class="text-blue-600 dark:text-blue-400">👁️ Bekijken</span> - Toont gedetailleerde informatie over een gebruiker</li>
+                                <li><span class="text-amber-600 dark:text-amber-400">✏️ Bewerken</span> - Wijzig gebruikersgegevens zoals naam, e-mail of rol</li>
+                                <li><span class="text-red-600 dark:text-red-400">🗑️ Verwijderen</span> - Verwijdert een gebruiker (let op: deze actie kan niet ongedaan worden gemaakt!)</li>
+                            </ul>
+                        </li>
+                        <li><span class="font-semibold">Rollen:</span> Gebruikers worden weergegeven met gekleurde labels:
+                            <ul class="list-disc list-inside pl-4 mt-1">
+                                <li><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-600 text-white">Admin</span> - Beheerders met volledige rechten</li>
+                                <li><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white">Instructeur</span> - Rijinstructeurs</li>
+                                <li><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-600 text-white">Student</span> - Leerlingen</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p class="mt-3 italic">Klik op de <span class="font-semibold">Help</span> knop rechtsboven als u deze instructies opnieuw wilt bekijken.</p>
                 </div>
             </div>
             <button type="button" onclick="document.getElementById('help-info').style.display='none'" class="ml-auto text-blue-500 hover:text-blue-700 dark:hover:text-blue-300">
@@ -34,8 +49,22 @@
 
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
         <!-- Header met titel -->
-        <div class="bg-blue-600 dark:bg-blue-800 text-white p-4">
+        <div class="bg-blue-600 dark:bg-blue-800 text-white p-4 flex justify-between items-center">
             <h1 class="text-2xl font-semibold">Account Overzicht</h1>
+            <div class="flex space-x-2">
+                <a href="{{ route('accounts.create') }}" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Nieuw Account
+                </a>
+                <button id="help-button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Help
+                </button>
+            </div>
         </div>
 
         <!-- Geavanceerde zoek- en filtersectie -->
@@ -111,22 +140,6 @@
                 <thead class="bg-gray-50 dark:bg-slate-700">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            <a href="{{ route('accounts.index', array_merge(request()->query(), ['sort_by' => 'id', 'sort_direction' => request('sort_by') === 'id' && request('sort_direction') === 'asc' ? 'desc' : 'asc'])) }}" class="group inline-flex items-center">
-                                #
-                                @if(request('sort_by') === 'id')
-                                    <span class="ml-1 text-gray-400">
-                                        @if(request('sort_direction') === 'asc')
-                                            ↑
-                                        @else
-                                            ↓
-                                        @endif
-                                    </span>
-                                @else
-                                    <span class="ml-1 text-gray-400 opacity-0 group-hover:opacity-100">↓</span>
-                                @endif
-                            </a>
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                             <a href="{{ route('accounts.index', array_merge(request()->query(), ['sort_by' => 'first_name', 'sort_direction' => request('sort_by') === 'first_name' && request('sort_direction') === 'asc' ? 'desc' : 'asc'])) }}" class="group inline-flex items-center">
                                 Naam
                                 @if(request('sort_by') === 'first_name')
@@ -172,14 +185,23 @@
                 <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-600">
                     @forelse($users as $user)
                         <tr class="hover:bg-gray-50 dark:hover:bg-slate-700">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $user->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->first_name }} {{ $user->last_name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $user->username }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @foreach($user->roles as $role)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 dark:bg-blue-700 text-white mr-1">
+                                    @php
+                                        $roleColors = [
+                                            'Admin' => 'bg-purple-600 dark:bg-purple-700',
+                                            'Instructeur' => 'bg-green-600 dark:bg-green-700',
+                                            'Student' => 'bg-orange-600 dark:bg-orange-700',
+                                            // Fallback
+                                            'default' => 'bg-blue-600 dark:bg-blue-700'
+                                        ];
+                                        $bgColor = $roleColors[$role->name] ?? $roleColors['default'];
+                                    @endphp
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $bgColor }} text-white mr-1">
                                         {{ $role->name }}
                                     </span>
                                 @endforeach
@@ -276,17 +298,27 @@
 
 <!-- JavaScript voor de hulpinfo-sectie -->
 <script>
-    // Controleer of de gebruiker de hulpsectie al heeft gesloten
     document.addEventListener('DOMContentLoaded', function() {
         const helpInfo = document.getElementById('help-info');
+        const helpButton = document.getElementById('help-button');
+
+        // Toon of verberg de hulpinfo op basis van eerder gedrag
         if (helpInfo && localStorage.getItem('accountHelpDismissed')) {
             helpInfo.style.display = 'none';
         }
 
-        // Voeg event listener toe om de sluiting op te slaan
+        // Help-knop functionaliteit: toon de hulpsectie weer
+        helpButton.addEventListener('click', function() {
+            helpInfo.style.display = 'block';
+            // Optioneel: scroll naar de hulpinfo
+            helpInfo.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Sluitknop
         const closeButton = helpInfo?.querySelector('button');
         if (closeButton) {
             closeButton.addEventListener('click', function() {
+                helpInfo.style.display = 'none';
                 localStorage.setItem('accountHelpDismissed', 'true');
             });
         }

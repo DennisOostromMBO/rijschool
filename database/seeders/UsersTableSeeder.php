@@ -17,6 +17,8 @@ class UsersTableSeeder extends Seeder
                 'last_name' => 'Doe',
                 'birth_date' => '1990-01-01',
                 'username' => 'johndoe',
+                'email' => 'john.doe@example.com', // Added email
+                'phone' => '+31612345678', // Added phone number
                 'password' => Hash::make('password123'),
                 'is_logged_in' => false,
                 'logged_in_at' => null,
@@ -32,6 +34,8 @@ class UsersTableSeeder extends Seeder
                 'last_name' => 'Smith',
                 'birth_date' => '1995-05-15',
                 'username' => 'janesmith',
+                'email' => 'jane.smith@example.com', // Added email
+                'phone' => '+31623456789', // Added phone number
                 'password' => Hash::make('password123'),
                 'is_logged_in' => false,
                 'logged_in_at' => null,
@@ -47,6 +51,8 @@ class UsersTableSeeder extends Seeder
                 'last_name' => 'Johnson',
                 'birth_date' => '2000-09-10',
                 'username' => 'alicejohnson',
+                'email' => 'alice.johnson@example.com', // Added email
+                'phone' => '+31634567890', // Added phone number
                 'password' => Hash::make('studentpass'),
                 'is_logged_in' => false,
                 'logged_in_at' => null,
