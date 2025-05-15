@@ -2,23 +2,22 @@
 
 @section('content')
 <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-7xl mx-auto mt-8">
-    <!-- Header altijd bovenaan -->
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Overzicht Leerlingen</h1>
+        @if (!empty($students))
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Overzicht Leerlingen</h1>
+        @else
+            <div></div>
+        @endif
         <a href="#" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
             ➕ Voeg Leerling Toe
         </a>
     </div>
-
-    <!-- Geen gegevens beschikbaar -->
     @if (empty($students))
-        <div class="flex flex-col items-center justify-center text-center text-red-500 font-semibold mt-10 mb-10">
-            <p class="text-4xl text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900">Geen leerlinggegevens beschikbaar</p>
+        <div class="flex flex-col items-center justify-center text-center font-semibold mt-10 mb-10">
+            <p class="text-4xl text-red-600 dark:text-red-400 bg-white dark:bg-gray-900">Momenteel geen gegevens beschikbaar</p>
         </div>
-    @endif
-
-    <!-- Tabel voor grotere schermen -->
-    @if (!empty($students))
+    @else
+        <!-- Tabel voor grotere schermen -->
         <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full table-auto border-collapse border border-gray-200 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
                 <thead>
