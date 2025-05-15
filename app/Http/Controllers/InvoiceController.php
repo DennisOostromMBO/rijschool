@@ -18,20 +18,44 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the invoices.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Retrieve search inputs
+        $searchStudent = $request->input('student_name');
+        $searchStatus = $request->input('status');
+        $searchInvoiceNumber = $request->input('factuurnummer');
+
         // Call the stored procedure via the model
-        $invoices = collect(Invoice::getInvoicesFromSP()); // Convert array to collection
+        $invoices = collect(Invoice::getInvoicesFromSP());
+
+        // Filter the collection based on search inputs
+        if ($searchStudent) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchStudent) {
+                return stripos($invoice->student_name, $searchStudent) !== false;
+            });
+        }
+
+        if ($searchStatus) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchStatus) {
+                return stripos($invoice->invoice_status, $searchStatus) !== false;
+            });
+        }
+
+        if ($searchInvoiceNumber) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchInvoiceNumber) {
+                return stripos($invoice->invoice_number, $searchInvoiceNumber) !== false;
+            });
+        }
 
         // Manually paginate the collection
-        $currentPage = request()->get('page', 1); // Get the current page or default to 1
-        $perPage = 10; // Number of items per page
+        $currentPage = $request->get('page', 1);
+        $perPage = 10;
         $paginatedInvoices = new LengthAwarePaginator(
-            $invoices->forPage($currentPage, $perPage), // Slice the collection for the current page
-            $invoices->count(), // Total items
-            $perPage, // Items per page
-            $currentPage, // Current page
-            ['path' => request()->url(), 'query' => request()->query()] // Preserve query parameters
+            $invoices->forPage($currentPage, $perPage),
+            $invoices->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
         );
 
         return view('invoices.index', ['invoices' => $paginatedInvoices]);
