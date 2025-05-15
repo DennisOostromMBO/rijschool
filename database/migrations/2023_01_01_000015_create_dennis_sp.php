@@ -10,15 +10,20 @@ return new class extends Migration
     {
         // Drop the stored procedure if it exists
         DB::unprepared('DROP PROCEDURE IF EXISTS SPGetAllStudents');
+        DB::unprepared('DROP PROCEDURE IF EXISTS SPGetAllInstructors');
 
-        // Load the stored procedure from the SQL file
-        $path = database_path('SP/dennis/students/SPGetAllStudents.sql');
-        DB::unprepared(File::get($path));
+        // Load the stored procedures from the SQL files
+        $studentPath = database_path('SP/dennis/students/SPGetAllStudents.sql');
+        DB::unprepared(File::get($studentPath));
+
+        $instructorPath = database_path('SP/dennis/instructors/SPGetAllInstructors.sql');
+        DB::unprepared(File::get($instructorPath));
     }
 
     public function down(): void
     {
-        // Drop the stored procedure
+        // Drop the stored procedures
         DB::unprepared('DROP PROCEDURE IF EXISTS SPGetAllStudents');
+        DB::unprepared('DROP PROCEDURE IF EXISTS SPGetAllInstructors');
     }
 };
