@@ -25,6 +25,41 @@
             </div>
         </div>
 
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('payments.index') }}" class="mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Search by Payer Name -->
+                <div>
+                    <label for="payer_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Betaler Naam</label>
+                    <input type="text" name="payer_name" id="payer_name" value="{{ request('payer_name') }}" placeholder="Zoek op betaler" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                </div>
+
+                <!-- Search by Status -->
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                    <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Alle</option>
+                        <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Betaald</option>
+                        <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>In Behandeling</option>
+                        <option value="Failed" {{ request('status') == 'Failed' ? 'selected' : '' }}>Mislukt</option>
+                    </select>
+                </div>
+
+                <!-- Search by Invoice Number -->
+                <div>
+                    <label for="invoice_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Factuurnummer</label>
+                    <input type="text" name="invoice_number" id="invoice_number" value="{{ request('invoice_number') }}" placeholder="Zoek op factuurnummer" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow">
+                    Zoeken
+                </button>
+                <a href="{{ route('payments.index') }}" class="ml-4 text-gray-500 hover:underline">Reset</a>
+            </div>
+        </form>
+
         <!-- Payments Table -->
         <div class="overflow-hidden shadow rounded-lg">
             <table class="min-w-full bg-white dark:bg-gray-800">
