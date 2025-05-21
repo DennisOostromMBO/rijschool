@@ -13,8 +13,8 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Gebruiksaanwijzing - Account Overzicht</h3>
-                <div class="mt-2 text-sm text-blue-700 dark:text-blue-200">
+                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Gebruiksaanwijzing - Account Overzicht</h3>
+                <div class="mt-2 text-sm text-blue-700 dark:text-blue-100">
                     <p class="font-semibold mb-1">Op deze pagina kunt u alle gebruikersaccounts beheren:</p>
                     <ol class="list-decimal list-inside mt-1 pl-2 space-y-2">
                         <li><span class="font-semibold">Zoeken:</span> Vul een naam of gebruikersnaam in het zoekvak in en klik op de blauwe 'Zoeken' knop.</li>
@@ -50,9 +50,9 @@
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
         <!-- Header met titel -->
         <div class="bg-blue-600 dark:bg-blue-800 text-white p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-semibold">Account Overzicht</h1>
+            <h1 class="text-2xl font-semibold text-white">Account Overzicht</h1>
             <div class="flex space-x-2">
-                <a href="{{ route('accounts.create') }}" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
+                <a href="{{ route('accounts.create') }}" class="text-white dark:text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
@@ -87,8 +87,8 @@
 
                     <!-- Rol filter -->
                     <div class="w-full sm:w-auto">
-                        <label for="role" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">Filter op rol</label>
-                        <select name="role" id="role" class="rounded-md border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30">
+                        <label for="role" class="block mb-1 text-sm font-medium text-gray-700 dark:text-white">Filter op rol</label>
+                        <select name="role" id="role" class="rounded-md border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30">
                             <option value="">Alle rollen</option>
                             @foreach($roles as $roleName)
                                 <option value="{{ $roleName }}" {{ request('role') == $roleName ? 'selected' : '' }}>{{ $roleName }}</option>
@@ -98,8 +98,8 @@
 
                     <!-- Items per pagina -->
                     <div class="w-full sm:w-auto">
-                        <label for="per_page" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">Items per pagina</label>
-                        <select name="per_page" id="per_page" class="rounded-md border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30">
+                        <label for="per_page" class="block mb-1 text-sm font-medium text-gray-700 dark:text-white">Items per pagina</label>
+                        <select name="per_page" id="per_page" class="rounded-md border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30">
                             @foreach([10, 25, 50, 100] as $perPageOption)
                                 <option value="{{ $perPageOption }}" {{ request('per_page') == $perPageOption ? 'selected' : '' }}>{{ $perPageOption }}</option>
                             @endforeach

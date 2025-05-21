@@ -27,5 +27,11 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
         Route::post('/{notification}/send', [NotificationController::class, 'send'])->name('send');
         Route::get('/user/{user}', [NotificationController::class, 'userNotifications'])->name('user');
+        Route::post('/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
+        Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-as-read');
+
+        // New instructor-specific routes
+        Route::get('/instructor/students', [NotificationController::class, 'instructorStudents'])->name('instructor-students');
+        Route::get('/create/student/{student}', [NotificationController::class, 'createForStudent'])->name('create-for-student');
     });
 });

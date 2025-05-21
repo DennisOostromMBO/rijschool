@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profiel - Rijschool Vierkante Wielen</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css', 'resources/css/dark-mode.css'])
     @else
         <link rel="stylesheet" href="{{ asset('css/rijschool-styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
     @endif
     <style>
         :root {
@@ -40,14 +41,6 @@
             background: #1e293b;
             border-color: #334155;
         }
-        .dark label,
-        .dark .font-semibold,
-        .dark .font-medium,
-        .dark .text-gray-700,
-        .dark .text-gray-800,
-        .dark .text-gray-900 {
-            color: #60a5fa !important;
-        }
         .dark input,
         .dark select,
         .dark textarea {
@@ -58,14 +51,7 @@
         .dark .card-body {
             color: #e0e7ef;
         }
-        .dark .text-sm, .dark .text-base {
-            color: #60a5fa !important;
-        }
-        .dark .text-blue-600, .dark .text-blue-400 {
-            color: #60a5fa !important;
-        }
         .dark .btn, .dark button, .dark input[type=submit] {
-            background: #2563eb;
             color: #fff;
         }
         .dark .btn:hover, .dark button:hover, .dark input[type=submit]:hover {
@@ -99,24 +85,38 @@
             <a href="{{ url('/instructors') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Instructeurs</a>
             <a href="{{ url('/cars') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Auto's</a>
             <a href="{{ url('/lessons') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Rijlessen</a>
+            <x-notification-bell mobile="true" />
+            @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
+            <a href="{{ route('accounts.index') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Accounts</a>
+            @endif
         </x-slot:mobileMenu>
     </x-navbar>
     <div class="py-16 bg-gray-100 dark:bg-slate-900 min-h-screen">
-        <div class="max-w-3xl mx-auto space-y-8">
-            <h2 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-8 text-center">Profiel</h2>
-            <div class="card">
-                <div class="card-body">
-                    @include('profile.partials.update-profile-information-form')
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-extrabold text-blue-600 dark:text-gray-100 mb-10 text-center">Uw Profiel</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="card-body">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-blue-300 mb-6">Persoonlijke Informatie</h3>
+                        @include('profile.partials.update-profile-information-form')
+                    </div>
+                </div>
+
+                <div class="card shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="card-body">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-blue-300 mb-6">Wachtwoord Bijwerken</h3>
+                        @include('profile.partials.update-password-form')
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    @include('profile.partials.delete-user-form')
+
+            <div class="mt-8">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-blue-300 mb-6">Account Beheren</h3>
+                        @include('profile.partials.delete-user-form')
+                    </div>
                 </div>
             </div>
         </div>

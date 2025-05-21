@@ -62,7 +62,7 @@ class User extends Authenticatable
 
     /**
      * Check if the user has a specific role.
-     * 
+     *
      * @param string|array $roles
      * @return bool
      */
@@ -71,7 +71,7 @@ class User extends Authenticatable
         if (is_string($roles)) {
             return $this->roles->where('name', $roles)->isNotEmpty();
         }
-        
+
         return $this->roles->whereIn('name', $roles)->isNotEmpty();
     }
 
@@ -87,7 +87,7 @@ class User extends Authenticatable
 
     /**
      * Check if the user is an instructor.
-     * 
+     *
      * @return bool
      */
     public function isInstructor(): bool
@@ -97,7 +97,7 @@ class User extends Authenticatable
 
     /**
      * Check if the user is a student.
-     * 
+     *
      * @return bool
      */
     public function isStudent(): bool
@@ -107,7 +107,7 @@ class User extends Authenticatable
 
     /**
      * Get all users with a specific role.
-     * 
+     *
      * @param string $role
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -148,5 +148,42 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get user's unread notification count
+     *
+     * @return int
+     */
+    public function getUnreadNotificationsCount()
+    {
+        // If admin, count all active notifications
+        if ($this->isAdmin()) {
+            return Notification::where('is_active', true)->count();
+        }
+
+        // For instructors, count relevant notifications
+        if ($this->isInstructor()) {
+            return Notification::where('is_active', true)
+                ->where(function($query) {
+                    $query->where('target_group', 'Instructor')
+                          ->orWhere('target_group', 'Both')
+                          ->orWhere('user_id', $this->id);
+                })
+                ->count();
+        }
+
+        // For students, count relevant notifications
+        if ($this->isStudent()) {
+            return Notification::where('is_active', true)
+                ->where(function($query) {
+                    $query->where('target_group', 'Student')
+                          ->orWhere('target_group', 'Both')
+                          ->orWhere('user_id', $this->id);
+                })
+                ->count();
+        }
+
+        return 0;
     }
 }

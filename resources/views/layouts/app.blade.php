@@ -13,10 +13,12 @@
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css'])
+            @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css', 'resources/css/dark-mode.css'])
         @else
             <link rel="stylesheet" href="{{ asset('css/rijschool-styles.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
         @endif
+        <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
 
         <!-- Additional Custom Styles -->
         <style>
@@ -32,7 +34,7 @@
                 font-family: 'Montserrat', sans-serif;
             }
         </style>
-        @stack('scripts')
+        @stack('styles')
     </head>
     <body class="antialiased bg-light-bg dark:bg-dark-bg">
         <!-- Navigation -->
@@ -59,6 +61,9 @@
                 <a href="{{ url('/instructors') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Instructeurs</a>
                 <a href="{{ url('/cars') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Auto's</a>
                 <a href="{{ url('/lessons') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Rijlessen</a>
+
+                <x-notification-bell mobile="true" />
+
                 @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
                 <a href="{{ route('accounts.index') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Accounts</a>
                 @endif
@@ -144,6 +149,7 @@
             </div>
         </footer>
 
+                @stack('scripts')
         @yield('scripts')
     </body>
 </html>
