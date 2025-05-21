@@ -1,0 +1,148 @@
+/* Dark Mode Enhancements */
+
+/* Improved text visibility in dark mode */
+.dark body {
+    color: white;
+    background-color: #0f172a; /* slate-900 */
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: white;
+}
+
+/* Text inputs */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="tel"],
+.dark input[type="url"],
+.dark input[type="search"],
+.dark input[type="date"],
+.dark textarea {
+    background-color: #334155; /* slate-700 */
+    color: white;
+    border-color: #475569; /* slate-600 */
+}
+
+.dark input::placeholder {
+    color: #94a3b8; /* slate-400 */
+}
+
+/* Select elements */
+.dark select {
+    background-color: #334155; /* slate-700 */
+    color: white;
+    border-color: #475569; /* slate-600 */
+}
+
+.dark select option {
+    background-color: #1e293b; /* slate-800 */
+    color: white;
+}
+
+/* Dropdowns and listboxes */
+.dark [role="listbox"],
+.dark [role="menu"] {
+    background-color: #1e293b; /* slate-800 */
+    border-color: #475569; /* slate-600 */
+}
+
+.dark [role="option"],
+.dark [role="menuitem"] {
+    color: white;
+}
+
+.dark [role="option"]:hover,
+.dark [role="menuitem"]:hover {
+    background-color: #334155; /* slate-700 */
+}
+
+/* Tables */
+.dark table {
+    color: #f1f5f9; /* slate-100 */
+}
+
+.dark thead {
+    background-color: #1e293b; /* slate-800 */
+    color: white;
+}
+
+.dark tbody tr {
+    border-color: #334155; /* slate-700 */
+}
+
+.dark tbody tr:hover {
+    background-color: #1e293b; /* slate-800 */
+}
+
+/* Cards and panels */
+.dark .card,
+.dark .panel {
+    background-color: #1e293b; /* slate-800 */
+    border-color: #334155; /* slate-700 */
+}
+
+/* Ensure dark text on light backgrounds and light text on dark backgrounds */
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-gray-900,
+.dark label,
+.dark .font-semibold,
+.dark .font-medium {
+    color: #f1f5f9 !important; /* slate-100 */
+}
+
+.dark .text-sm,
+.dark .text-base {
+    color: #e2e8f0 !important; /* slate-200 */
+}
+
+/* Fix navigation bar text color in dark mode */
+.dark nav a,
+.dark nav .text-gray-500,
+.dark nav .text-gray-700,
+.dark nav .text-gray-900,
+.dark nav button span,
+.dark nav .text-blue-600,
+.dark nav .dark\:text-blue-400 {
+    color: #f1f5f9 !important; /* slate-100 */
+}
+
+.dark nav .text-blue-600.dark\:text-blue-400,
+.dark nav .dark\:text-blue-400 {
+    color: #f1f5f9 !important; /* slate-100 */
+}
+
+.dark .text-gray-600 {
+    color: #e2e8f0 !important; /* slate-200 */
+}
+
+.dark .text-gray-500 {
+    color: #cbd5e1 !important; /* slate-300 */
+}
+
+/* Fix headings with blue text in dark mode */
+.dark h1.text-blue-600,
+.dark h2.text-blue-600,
+.dark h3.text-blue-600,
+.dark h4.text-blue-600,
+.dark h5.text-blue-600,
+.dark h6.text-blue-600,
+.dark .text-blue-600.dark\:text-blue-400,
+.dark .dark\:text-blue-400 {
+    color: #f1f5f9 !important; /* slate-100 */
+}
+
+/* Fix the dropdown text specifically in "Filter op rol" and "Items per pagina" */
+.dark #role,
+.dark #per_page {
+    color: #ffffff;
+    background-color: #334155;
+}
+
+.dark #role option,
+.dark #per_page option {
+    background-color: #1e293b;
+    color: #ffffff;
+}

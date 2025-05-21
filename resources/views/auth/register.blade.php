@@ -28,6 +28,16 @@
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
         <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">E-mailadres</label>
+            <input id="email" name="email" type="email" autocomplete="email" value="{{ old('email') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+        <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Telefoonnummer</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" value="{{ old('phone') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500" />
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+        <div>
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Wachtwoord</label>
             <input id="password" name="password" type="password" required autocomplete="new-password" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />

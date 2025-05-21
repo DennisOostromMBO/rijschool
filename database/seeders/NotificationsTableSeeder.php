@@ -12,6 +12,7 @@ class NotificationsTableSeeder extends Seeder
         DB::table('notifications')->insert([
             [
                 'user_id' => 1,
+                'title' => 'Wijziging in lesschema',
                 'target_group' => 'Student',
                 'message' => 'Lesson rescheduled',
                 'notification_type' => 'LessonChange',
@@ -23,6 +24,7 @@ class NotificationsTableSeeder extends Seeder
             ],
             [
                 'user_id' => 2,
+                'title' => 'Nieuwe les toegewezen',
                 'target_group' => 'Instructor',
                 'message' => 'New lesson assigned',
                 'notification_type' => 'LessonAssignment',

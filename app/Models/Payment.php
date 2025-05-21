@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Payment extends Model
 {
@@ -31,18 +32,18 @@ class Payment extends Model
     }
 
     /**
-     * Get the student that this payment is from through the invoice and registration.
+     * Get the user (payer) through the related models.
      */
-    public function student()
+    public function user()
     {
-        return $this->invoice->student();
+        return $this->invoice->registration->student->user ?? null;
     }
 
     /**
-     * Check if the payment is completed.
+     * Get payments using the stored procedure.
      */
-    public function isCompleted()
+    public static function getPaymentsFromSP()
     {
-        return $this->status === 'completed';
+        return DB::select('CALL GetPayments()');
     }
 }

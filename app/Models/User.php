@@ -23,9 +23,10 @@ class User extends Authenticatable
         'last_name',
         'birth_date',
         'username',
-        'password',
         'email',
-        'role_id',
+        'phone',
+        'password',
+        // Removing role_id from fillable to prevent direct assignment
     ];
 
     /**
@@ -56,7 +57,65 @@ class User extends Authenticatable
      */
     public function roles()
     {
-        return $this->hasMany(Role::class);
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param string|array $roles
+     * @return bool
+     */
+    public function hasRole($roles): bool
+    {
+        if (is_string($roles)) {
+            return $this->roles->where('name', $roles)->isNotEmpty();
+        }
+
+        return $this->roles->whereIn('name', $roles)->isNotEmpty();
+    }
+
+    /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
+    /**
+     * Check if the user is an instructor.
+     *
+     * @return bool
+     */
+    public function isInstructor(): bool
+    {
+        return $this->hasRole('Instructor');
+    }
+
+    /**
+     * Check if the user is a student.
+     *
+     * @return bool
+     */
+    public function isStudent(): bool
+    {
+        return $this->hasRole('Student');
+    }
+
+    /**
+     * Get all users with a specific role.
+     *
+     * @param string $role
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function withRole(string $role)
+    {
+        return static::whereHas('roles', function($query) use ($role) {
+            $query->where('name', $role);
+        })->get();
     }
 
     /**
@@ -89,5 +148,42 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get user's unread notification count
+     *
+     * @return int
+     */
+    public function getUnreadNotificationsCount()
+    {
+        // If admin, count all active notifications
+        if ($this->isAdmin()) {
+            return Notification::where('is_active', true)->count();
+        }
+
+        // For instructors, count relevant notifications
+        if ($this->isInstructor()) {
+            return Notification::where('is_active', true)
+                ->where(function($query) {
+                    $query->where('target_group', 'Instructor')
+                          ->orWhere('target_group', 'Both')
+                          ->orWhere('user_id', $this->id);
+                })
+                ->count();
+        }
+
+        // For students, count relevant notifications
+        if ($this->isStudent()) {
+            return Notification::where('is_active', true)
+                ->where(function($query) {
+                    $query->where('target_group', 'Student')
+                          ->orWhere('target_group', 'Both')
+                          ->orWhere('user_id', $this->id);
+                })
+                ->count();
+        }
+
+        return 0;
     }
 }

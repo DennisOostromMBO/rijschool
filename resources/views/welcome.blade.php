@@ -106,6 +106,10 @@
                 <a href="{{ url('/cars') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Auto's</a>
 
                 <a href="{{ url('/lessons') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Rijlessen</a>
+
+                @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
+                <a href="{{ route('accounts.index') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accounts</a>
+                @endif
             </x-slot:desktopMenu>
 
             <x-slot:mobileMenu>
@@ -114,6 +118,8 @@
                 <a href="{{ url('/instructors') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Instructeurs</a>
                 <a href="{{ url('/cars') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Auto's</a>
                 <a href="{{ url('/lessons') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Rijlessen</a>
+
+                <x-notification-bell mobile="true" />
             </x-slot:mobileMenu>
         </x-navbar>
 

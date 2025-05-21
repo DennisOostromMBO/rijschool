@@ -16,12 +16,18 @@ class Notification extends Model
      */
     protected $fillable = [
         'user_id',
+        'title',
         'target_group',
         'message',
         'notification_type',
         'date',
         'is_active',
+        'is_sent',
+        'sent_at',
         'remark',
+        'recipient_id',
+        'is_read',
+        'read_at',
     ];
 
     /**
@@ -32,6 +38,10 @@ class Notification extends Model
     protected $casts = [
         'date' => 'date',
         'is_active' => 'boolean',
+        'is_sent' => 'boolean',
+        'is_read' => 'boolean',
+        'sent_at' => 'datetime',
+        'read_at' => 'datetime',
     ];
 
     /**
@@ -40,6 +50,14 @@ class Notification extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the recipient of the notification, if any.
+     */
+    public function recipient()
+    {
+        return $this->belongsTo(User::class, 'recipient_id');
     }
 
     /**

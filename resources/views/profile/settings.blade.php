@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Instellingen - Rijschool Vierkante Wielen</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/rijschool-styles.css', 'resources/css/dark-mode.css'])
     @else
         <link rel="stylesheet" href="{{ asset('css/rijschool-styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
     @endif
     <style>
         :root {
@@ -40,36 +41,19 @@
             background: #1e293b;
             border-color: #334155;
         }
-        .dark label,
-        .dark .font-semibold,
-        .dark .font-medium,
-        .dark .text-gray-700,
-        .dark .text-gray-800,
-        .dark .text-gray-900 {
-            color: #60a5fa !important;
-        }
         .dark input,
         .dark select,
         .dark textarea {
             color: #e0e7ef;
-            background: #0f172a;
             border-color: #334155;
         }
         .dark .card-body {
             color: #e0e7ef;
         }
-        .dark .text-sm, .dark .text-base {
-            color: #60a5fa !important;
-        }
-        .dark .text-blue-600, .dark .text-blue-400 {
-            color: #60a5fa !important;
-        }
         .dark .btn, .dark button, .dark input[type=submit] {
-            background: #2563eb;
             color: #fff;
         }
         .dark .btn:hover, .dark button:hover, .dark input[type=submit]:hover {
-            background: #1d4ed8;
         }
         nav {
             position: fixed;
@@ -92,6 +76,9 @@
             <a href="{{ url('/instructors') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Instructeurs</a>
             <a href="{{ url('/cars') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Auto's</a>
             <a href="{{ url('/lessons') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Rijlessen</a>
+            @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
+            <a href="{{ route('accounts.index') }}" class="nav-item border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Accounts</a>
+            @endif
         </x-slot:desktopMenu>
         <x-slot:mobileMenu>
             <a href="{{ url('/home') }}" class="bg-blue-50 dark:bg-slate-800 border-blue-500 text-blue-700 dark:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Home</a>
@@ -99,11 +86,15 @@
             <a href="{{ url('/instructors') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Instructeurs</a>
             <a href="{{ url('/cars') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Auto's</a>
             <a href="{{ url('/lessons') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Rijlessen</a>
+            <x-notification-bell mobile="true" />
+            @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
+            <a href="{{ route('accounts.index') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Accounts</a>
+            @endif
         </x-slot:mobileMenu>
     </x-navbar>
     <div class="py-16 bg-gray-100 dark:bg-slate-900 min-h-screen">
         <div class="max-w-3xl mx-auto space-y-8">
-            <h2 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-8 text-center">Instellingen</h2>
+            <h2 class="text-3xl font-extrabold text-blue-600 dark:text-gray-100 mb-8 text-center">Instellingen</h2>
             <div class="card">
                 <div class="card-body">
                     <section>

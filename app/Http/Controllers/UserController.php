@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -55,7 +56,7 @@ class UserController extends Controller
         $users = $query->paginate($perPage)->withQueryString();
 
         // Haal alle unieke rolnamen op voor het filter
-        $roles = \App\Models\Role::select('name')->distinct()->pluck('name');
+        $roles = Role::select('name')->distinct()->pluck('name');
 
         return view('account.index', compact('users', 'roles'));
     }
@@ -65,7 +66,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('account.create');
+        $roles = Role::all();
+        return view('account.create', compact('roles'));
     }
 
     /**
@@ -74,21 +76,30 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role_id' => ['required', 'exists:roles,id'],
+            'roles' => ['required', 'array'],
+            'roles.*' => ['exists:roles,id'],
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'username' => $validated['username'],
+            'email' => $validated['email'] ?? null,
+            'phone' => $validated['phone'] ?? null,
             'password' => Hash::make($validated['password']),
-            'role_id' => $validated['role_id'],
         ]);
 
+        // Koppel de gekozen rollen aan de gebruiker
+        $user->roles()->attach($validated['roles']);
+
         return redirect()->route('accounts.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', 'Gebruiker is succesvol aangemaakt.');
     }
 
     /**
@@ -96,6 +107,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->load('roles');
         return view('account.show', compact('user'));
     }
 
@@ -104,6 +116,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $user->load('roles');
         return view('account.edit', compact('user'));
     }
 
@@ -113,15 +126,21 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role_id' => ['required', 'exists:roles,id'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'roles' => ['required', 'array'],
+            'roles.*' => ['exists:roles,id'],
         ]);
 
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->role_id = $validated['role_id'];
+        $user->first_name = $validated['first_name'];
+        $user->last_name = $validated['last_name'];
+        $user->username = $validated['username'];
+        $user->email = $validated['email'] ?? $user->email;
+        $user->phone = $validated['phone'] ?? $user->phone;
 
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
@@ -129,8 +148,11 @@ class UserController extends Controller
 
         $user->save();
 
+        // Synchrooniseer de rollen (verwijdert oude koppelingen en voegt nieuwe toe)
+        $user->roles()->sync($validated['roles']);
+
         return redirect()->route('accounts.index')
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'Gebruiker is succesvol bijgewerkt.');
     }
 
     /**
@@ -138,9 +160,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        // Ontkoppel alle rollen voordat de gebruiker wordt verwijderd
+        $user->roles()->detach();
+
+        // Verwijder de gebruiker
         $user->delete();
 
         return redirect()->route('accounts.index')
-            ->with('success', 'User deleted successfully.');
+            ->with('success', 'Gebruiker is succesvol verwijderd.');
     }
 }
