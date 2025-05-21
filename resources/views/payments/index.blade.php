@@ -2,7 +2,6 @@
 // Empty file - will contain payment processing and history functionality
 ?>
 
-{{-- filepath: c:\Users\danie\OneDrive\Documenten\school mappen\Leerjaar 2\Project\Periode 4\rijschool\resources\views\payments\index.blade.php --}}
 <x-layouts.app>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
