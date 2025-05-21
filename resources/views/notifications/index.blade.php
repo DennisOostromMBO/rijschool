@@ -1,10 +1,9 @@
 @extends('layouts.app')
-
 @section('title', 'Notificaties Overzicht')
-
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
+<div class="container mx-auto px-4 py-6 w-full">
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-visible">
+        <!-- Header & Actions -->
         <div class="bg-white dark:bg-slate-800 p-4 flex justify-between items-center border-b dark:border-slate-700">
             <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Notificaties</h1>
             <div class="flex space-x-2">
@@ -26,8 +25,8 @@
                 </a>
                 @endif
 
-                <button id="help-button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <button id="help-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Help
@@ -35,7 +34,7 @@
             </div>
         </div>
 
-        <!-- Informatieve sectie voor nieuwe gebruikers -->
+        <!-- Help Panel -->
         <div id="help-info" class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-4 rounded-r hidden">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -710,3 +709,4 @@
     }
 </style>
 @endpush
+@endsection
