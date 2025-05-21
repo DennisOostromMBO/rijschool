@@ -28,6 +28,7 @@
                         <th class="py-2 px-4 border">Adres</th>
                         <th class="py-2 px-4 border">Mobiel</th>
                         <th class="py-2 px-4 border">E-mail</th>
+                        <th class="py-2 px-4 border">Instructeur</th>
                         <th class="py-2 px-4 border">Bewerken</th>
                         <th class="py-2 px-4 border">Verwijderen</th>
                     </tr>
@@ -41,6 +42,7 @@
                             <td class="py-2 px-4 border">{{ $student->full_address }}</td>
                             <td class="py-2 px-4 border">{{ $student->mobile }}</td>
                             <td class="py-2 px-4 border">{{ $student->email }}</td>
+                            <td class="py-2 px-4 border">{{ $student->instructor_name ?? 'Geen instructeur' }}</td>
                             <td class="py-2 px-4 border text-center">
                                 <button class="text-blue-500 hover:text-blue-700">✏️</button>
                             </td>
@@ -74,6 +76,9 @@
                     </div>
                     <div class="mb-2">
                         <span class="font-semibold">E-mail:</span> {{ $student->email }}
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-semibold">Instructeur:</span> {{ $student->instructor_name ?? 'Geen instructeur' }}
                     </div>
                     <div class="flex justify-end gap-2 mt-4">
                         <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm">Bewerken</button>
