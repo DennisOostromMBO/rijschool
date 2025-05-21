@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // Import the PDF facade from Laravel DomPDF
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class InvoiceController extends Controller
 {
@@ -18,24 +20,45 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with(['student.user']);
+        // Retrieve search inputs
+        $searchStudent = $request->input('student_name');
+        $searchStatus = $request->input('status');
+        $searchInvoiceNumber = $request->input('factuurnummer');
 
-        // Apply filters if provided
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
+        // Call the stored procedure via the model
+        $invoices = collect(Invoice::getInvoicesFromSP());
+
+        // Filter the collection based on search inputs
+        if ($searchStudent) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchStudent) {
+                return stripos($invoice->student_name, $searchStudent) !== false;
+            });
         }
 
-        if ($request->has('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
+        if ($searchStatus) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchStatus) {
+                return stripos($invoice->invoice_status, $searchStatus) !== false;
+            });
         }
 
-        if ($request->has('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
+        if ($searchInvoiceNumber) {
+            $invoices = $invoices->filter(function ($invoice) use ($searchInvoiceNumber) {
+                return stripos($invoice->invoice_number, $searchInvoiceNumber) !== false;
+            });
         }
 
-        $invoices = $query->orderBy('created_at', 'desc')->paginate(15);
+        // Manually paginate the collection
+        $currentPage = $request->get('page', 1);
+        $perPage = 10;
+        $paginatedInvoices = new LengthAwarePaginator(
+            $invoices->forPage($currentPage, $perPage),
+            $invoices->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-        return view('invoices.index', compact('invoices'));
+        return view('invoices.index', ['invoices' => $paginatedInvoices]);
     }
 
     /**
@@ -84,9 +107,16 @@ class InvoiceController extends Controller
     /**
      * Display the specified invoice.
      */
-    public function show(Invoice $invoice)
+    public function show($id)
     {
-        $invoice->load(['student.user', 'registration.package']);
+        // Call the stored procedure and filter the result for the specific invoice
+        $invoices = collect(Invoice::getInvoicesFromSP());
+        $invoice = $invoices->firstWhere('id', $id);
+
+        if (!$invoice) {
+            abort(404, 'Factuur niet gevonden.');
+        }
+
         return view('invoices.show', compact('invoice'));
     }
 
