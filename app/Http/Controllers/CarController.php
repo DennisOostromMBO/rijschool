@@ -53,7 +53,6 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        $car->load('instructor');
         return view('cars.show', compact('car'));
     }
 
