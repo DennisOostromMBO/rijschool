@@ -15,36 +15,9 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        // Retrieve search inputs
-        $searchPayer = $request->input('payer_name');
-        $searchStatus = $request->input('status');
-        $searchInvoiceNumber = $request->input('invoice_number');
-
-        // Query payments with related data
-        $payments = Payment::with(['invoice.registration.student.user']);
-
-        if ($searchPayer) {
-            $payments = $payments->whereHas('invoice.registration.student.user', function ($query) use ($searchPayer) {
-                $query->where('full_name', 'like', '%' . $searchPayer . '%');
-            });
-        }
-
-        if ($searchStatus) {
-            $payments = $payments->where('status', $searchStatus);
-        }
-
-        if ($searchInvoiceNumber) {
-            $payments = $payments->whereHas('invoice', function ($query) use ($searchInvoiceNumber) {
-                $query->where('invoice_number', 'like', '%' . $searchInvoiceNumber . '%');
-            });
-        }
-
-        // Paginate results
-        $payments = $payments->paginate(15);
-
-        // Calculate summary data
-        $paidCount = Payment::where('status', 'Completed')->count();
-        $inProgressCount = Payment::whereIn('status', ['Pending', 'Not Paid'])->count();
+        $payments = Payment::with(['invoice.registration.student.user'])->paginate(15);
+        $paidCount = Payment::where('status', 'completed')->count();
+        $inProgressCount = Payment::whereIn('status', ['pending', 'not paid'])->count();
 
         return view('payments.index', compact('payments', 'paidCount', 'inProgressCount'));
     }
