@@ -11,7 +11,7 @@ class InstructorsTableSeeder extends Seeder
     {
         DB::table('instructors')->insert([
             [
-                'user_id' => 1,
+                'user_id' => 3,
                 'number' => 'INST001',
                 'is_active' => true,
                 'remark' => 'Main instructor',
@@ -19,7 +19,7 @@ class InstructorsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
+                'user_id' => 4,
                 'number' => 'INST002',
                 'is_active' => true,
                 'remark' => 'Backup instructor',

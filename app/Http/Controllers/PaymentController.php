@@ -15,24 +15,38 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Payment::with(['invoice', 'student.user']);
+        // Retrieve search inputs
+        $searchPayer = $request->input('payer_name');
+        $searchStatus = $request->input('status');
+        $searchInvoiceNumber = $request->input('invoice_number');
 
-        // Apply filters if provided
-        if ($request->has('payment_method')) {
-            $query->where('payment_method', $request->payment_method);
+        // Query payments with related data
+        $payments = Payment::with(['invoice.registration.student.user']);
+
+        if ($searchPayer) {
+            $payments = $payments->whereHas('invoice.registration.student.user', function ($query) use ($searchPayer) {
+                $query->where('full_name', 'like', '%' . $searchPayer . '%');
+            });
         }
 
-        if ($request->has('date_from')) {
-            $query->whereDate('payment_date', '>=', $request->date_from);
+        if ($searchStatus) {
+            $payments = $payments->where('status', $searchStatus);
         }
 
-        if ($request->has('date_to')) {
-            $query->whereDate('payment_date', '<=', $request->date_to);
+        if ($searchInvoiceNumber) {
+            $payments = $payments->whereHas('invoice', function ($query) use ($searchInvoiceNumber) {
+                $query->where('invoice_number', 'like', '%' . $searchInvoiceNumber . '%');
+            });
         }
 
-        $payments = $query->orderBy('payment_date', 'desc')->paginate(15);
+        // Paginate results
+        $payments = $payments->paginate(15);
 
-        return view('payments.index', compact('payments'));
+        // Calculate summary data
+        $paidCount = Payment::where('status', 'Completed')->count();
+        $inProgressCount = Payment::whereIn('status', ['Pending', 'Not Paid'])->count();
+
+        return view('payments.index', compact('payments', 'paidCount', 'inProgressCount'));
     }
 
     /**
