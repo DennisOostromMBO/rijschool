@@ -5,9 +5,8 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
-        <!-- Header met titel -->
-        <div class="bg-blue-600 dark:bg-blue-800 text-white p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-semibold text-white">Notificaties Overzicht</h1>
+        <div class="bg-white dark:bg-slate-800 p-4 flex justify-between items-center border-b dark:border-slate-700">
+            <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Notificaties</h1>
             <div class="flex space-x-2">
                 @if(auth()->user()->isAdmin() || auth()->user()->isInstructor())
                 <a href="{{ route('notifications.create') }}" class="text-white dark:text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-2 flex items-center">
