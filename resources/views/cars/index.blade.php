@@ -2,7 +2,7 @@
 
 @section('content')
 <div class=" text-center">
-    <h1>Cars Overview</h1>
+    <h1>Auto's</h1>
     <table class="table table-bordered text-center table-striped table-hover align-middle">
         <thead>
             <tr>

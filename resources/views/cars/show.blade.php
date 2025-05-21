@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="">
-    <h1>Car Details</h1>
+    <h1></h1>
     <table class="table table-bordered">
         <tr>
             <th>Brand</th>

@@ -3,7 +3,7 @@
 
 @section('content')
 <div class=" text-center">
-    <h1 class="mb-4">Lesson Overview</h1>
+    <h1 class="mb-4">Lessen</h1>
 
     {{-- Success and Error Messages --}}
     @if(session('success'))

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="text-center">
-    <h1 class="mb-4">Packages Overview</h1>
+    <h1 class="mb-4">pakketen</h1>
 
     {{-- Success and Error Messages --}}
     @if(session('success'))
