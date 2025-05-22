@@ -24,7 +24,6 @@
                     <tr class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 text-sm font-medium">
                         <th class="py-2 px-4 border">Naam</th>
                         <th class="py-2 px-4 border">Adres</th>
-                        <th class="py-2 px-4 border">Geboortedatum</th>
                         <th class="py-2 px-4 border">E-mail</th>
                         <th class="py-2 px-4 border">Instructeur Nummer</th>
                         <th class="py-2 px-4 border">Bewerken</th>
@@ -36,7 +35,6 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="py-2 px-4 border">{{ $instructor->first_name }} @if($instructor->middle_name) {{ $instructor->middle_name }} @endif {{ $instructor->last_name }}</td>
                             <td class="py-2 px-4 border">{{ $instructor->full_address }}</td>
-                            <td class="py-2 px-4 border">{{ $instructor->birth_date }}</td>
                             <td class="py-2 px-4 border">{{ $instructor->email }}</td>
                             <td class="py-2 px-4 border">{{ $instructor->number }}</td>
                             <td class="py-2 px-4 border text-center">
