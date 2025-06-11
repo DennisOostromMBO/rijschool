@@ -36,6 +36,8 @@ class InstructorController extends Controller
             'postal_code' => 'required|string|max:255|regex:/^[0-9]{4}[A-Z]{2}$/',
             'city' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:contacts,email'
+        ], [
+            'email.unique' => 'Let op! Dit e-mailadres is al in gebruik door een andere instructeur!'
         ]);
 
         try {
@@ -52,16 +54,11 @@ class InstructorController extends Controller
                 $request->email
             ]);
 
-            if (!$result) {
-                throw new Exception('Geen resultaat van stored procedure');
-            }
-
             return redirect()->route('instructors.index')
                 ->with('success', 'Instructeur is succesvol toegevoegd.');
         } catch (Exception $e) {
-            report($e); // Log de error
             return back()->withInput()
-                ->with('error', 'Er is een fout opgetreden bij het toevoegen van de instructeur: ' . $e->getMessage());
+                ->withErrors(['email' => 'Let op! Dit e-mailadres is al in gebruik door een andere instructeur!']);
         }
     }
 }
