@@ -16,4 +16,9 @@ class InstructorController extends Controller
             return back()->with('error', 'Er is een fout opgetreden bij het ophalen van de instructeurs.');
         }
     }
+
+    public function create()
+    {
+        return view('instructors.create');
+    }
 }

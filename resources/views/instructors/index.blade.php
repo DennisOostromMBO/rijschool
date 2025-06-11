@@ -8,7 +8,7 @@
         @else
             <div></div>
         @endif
-        <a href="#" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
+        <a href="{{ route('instructors.create') }}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
             ➕ Voeg Instructeur Toe
         </a>
     </div>
