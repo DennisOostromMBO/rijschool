@@ -12,7 +12,7 @@ class StudentsTableSeeder extends Seeder
         DB::table('students')->insert([
             [
                 'user_id' => 1,
-                'relation_number' => 'REL12345',
+                'relation_number' => 'LEER001',
                 'is_active' => true,
                 'remark' => 'First student',
                 'created_at' => now(),
@@ -20,7 +20,7 @@ class StudentsTableSeeder extends Seeder
             ],
             [
                 'user_id' => 2,
-                'relation_number' => 'REL67890',
+                'relation_number' => 'LEER002',
                 'is_active' => true,
                 'remark' => 'Second student',
                 'created_at' => now(),
