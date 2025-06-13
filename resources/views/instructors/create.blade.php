@@ -24,27 +24,49 @@
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Persoonlijke Informatie</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Voornaam</label>
-                    <input type="text" name="first_name" value="{{ old('first_name') }}" required 
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" 
+                            class="block w-full rounded-md @error('first_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('first_name')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div>
+
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tussenvoegsel</label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="middle_name" value="{{ old('middle_name') }}"
+                            class="block w-full rounded-md @error('middle_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('middle_name')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div>
+
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Achternaam</label>
-                    <input type="text" name="last_name" value="{{ old('last_name') }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="last_name" value="{{ old('last_name') }}"
+                            class="block w-full rounded-md @error('last_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('last_name')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
-            <div>
+            <div class="flex flex-col h-[85px]">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Geboortedatum</label>
-                <input type="date" name="birth_date" value="{{ old('birth_date') }}" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <div class="mt-1">
+                    <input type="date" name="birth_date" value="{{ old('birth_date') }}"
+                        class="block w-full rounded-md @error('birth_date') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                @error('birth_date')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
@@ -53,33 +75,61 @@
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Adresgegevens</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="md:col-span-2">
+                <div class="md:col-span-2 flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Straatnaam</label>
-                    <input type="text" name="street_name" value="{{ old('street_name') }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="street_name" value="{{ old('street_name') }}"
+                            class="block w-full rounded-md @error('street_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('street_name')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div>
+
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Huisnummer</label>
-                    <input type="text" name="house_number" value="{{ old('house_number') }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="house_number" value="{{ old('house_number') }}"
+                            class="block w-full rounded-md @error('house_number') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('house_number')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div>
+
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Toevoeging</label>
-                    <input type="text" name="addition" value="{{ old('addition') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="addition" value="{{ old('addition') }}"
+                            class="block w-full rounded-md @error('addition') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('addition')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Postcode</label>
-                    <input type="text" name="postal_code" value="{{ old('postal_code') }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="postal_code" value="{{ old('postal_code') }}"
+                            class="block w-full rounded-md @error('postal_code') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('postal_code')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div>
+
+                <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stad</label>
-                    <input type="text" name="city" value="{{ old('city') }}" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <div class="mt-1">
+                        <input type="text" name="city" value="{{ old('city') }}"
+                            class="block w-full rounded-md @error('city') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    @error('city')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
         </div>
@@ -88,10 +138,15 @@
         <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Contactgegevens</h2>
             
-            <div>
+            <div class="flex flex-col h-[85px]">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mailadres</label>
-                <input type="email" name="email" value="{{ old('email') }}" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('email') border-red-500 @enderror">
+                <div class="mt-1">
+                    <input type="email" name="email" value="{{ old('email') }}"
+                        class="block w-full rounded-md @error('email') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                @error('email')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
