@@ -6,23 +6,49 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Handles all instructor-related operations
+ */
 class InstructorController extends Controller
 {
+    /**
+     * Display a listing of all instructors
+     */
     public function index()
     {
         try {
             $instructors = DB::select('CALL SPGetAllInstructors()');
-            return view('instructors.index', ['instructors' => $instructors]);
+            $page = request()->get('page', 1);
+            $perPage = 5;
+
+            $pagedData = array_slice($instructors, ($page - 1) * $perPage, $perPage);
+
+            $paginatedInstructors = new \Illuminate\Pagination\LengthAwarePaginator(
+                $pagedData,
+                count($instructors),
+                $perPage,
+                $page,
+                ['path' => request()->url()]
+            );
+
+            return view('instructors.index', ['instructors' => $paginatedInstructors]);
         } catch (Exception $e) {
             return back()->with('error', 'Er is een fout opgetreden bij het ophalen van de instructeurs.');
         }
     }
 
+    /**
+     * Show the form for creating a new instructor
+     */
     public function create()
     {
         return view('instructors.create');
     }
 
+    /**
+     * Store a newly created instructor
+     * Validates input and handles unique email constraint
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -43,12 +69,12 @@ class InstructorController extends Controller
         try {
             $result = DB::select('CALL SPCreateInstructeur(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                 $request->first_name,
-                $request->middle_name ?: null,  // Convert empty string to null
+                $request->middle_name ?: null, 
                 $request->last_name,
                 $request->birth_date,
                 $request->street_name,
                 $request->house_number,
-                $request->addition ?: null,     // Convert empty string to null
+                $request->addition ?: null,    
                 $request->postal_code,
                 $request->city,
                 $request->email

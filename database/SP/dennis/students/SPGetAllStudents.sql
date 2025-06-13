@@ -13,5 +13,5 @@ BEGIN
     FROM students stud
     INNER JOIN users user ON stud.user_id = user.id
     INNER JOIN contacts cont ON cont.user_id = user.id
-    ORDER BY user.full_name;
+    ORDER BY stud.id DESC;
 END;

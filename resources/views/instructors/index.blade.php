@@ -79,5 +79,10 @@
             @endforeach
         </div>
     @endif
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $instructors->links() }}
+    </div>
 </div>
 @endsection

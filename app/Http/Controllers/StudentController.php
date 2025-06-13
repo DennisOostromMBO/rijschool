@@ -6,23 +6,49 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Handles all student-related operations
+ */
 class StudentController extends Controller
 {
+    /**
+     * Display a listing of all students
+     */
     public function index()
     {
         try {
             $students = DB::select('CALL SPGetAllStudents()');
-            return view('students.index', ['students' => $students]);
+            $page = request()->get('page', 1);
+            $perPage = 5;
+
+            $pagedData = array_slice($students, ($page - 1) * $perPage, $perPage);
+
+            $paginatedStudents = new \Illuminate\Pagination\LengthAwarePaginator(
+                $pagedData,
+                count($students),
+                $perPage,
+                $page,
+                ['path' => request()->url()]
+            );
+
+            return view('students.index', ['students' => $paginatedStudents]);
         } catch (Exception $e) {
             return back()->with('error', 'Er is een fout opgetreden bij het ophalen van de leerlingen.');
         }
     }
 
+    /**
+     * Show the form for creating a new student
+     */
     public function create()
     {
         return view('students.create');
     }
 
+    /**
+     * Store a newly created student
+     * Validates input and handles unique email/mobile constraints
+     */
     public function store(Request $request)
     {
         $request->validate([
