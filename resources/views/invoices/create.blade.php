@@ -14,19 +14,26 @@
                     <label class="block text-gray-700 font-semibold mb-2">Factuurnummer</label>
                     <div class="flex">
                         <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">INV-</span>
-                        <input type="text" name="invoice_number" id="invoice_number" class="w-full border rounded-r-lg px-4 py-2" placeholder="Bijv. 00123" value="{{ old('invoice_number') ? ltrim(strtoupper(old('invoice_number')), 'INV-') : '' }}" required>
+                        <input type="text" name="invoice_number" id="invoice_number" class="w-full border rounded-r-lg px-4 py-2 @error('invoice_number') border-red-500 @enderror" placeholder="Bijv. 00123"
+                            value="{{ old('invoice_number') ? ltrim(strtoupper(old('invoice_number')), 'INV-') : (isset($nextInvoiceNumber) ? ltrim($nextInvoiceNumber, 'INV-') : '') }}" required>
                     </div>
+                    @error('invoice_number')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Factuurdatum</label>
-                    <input type="text" name="invoice_date" id="invoice_date" class="w-full border rounded-lg px-4 py-2" placeholder="dd/mm/jjjj" value="{{ old('invoice_date') ? \Carbon\Carbon::parse(old('invoice_date'))->format('d/m/Y') : '' }}" required maxlength="10" autocomplete="off">
+                    <input type="text" name="invoice_date" id="invoice_date" class="w-full border rounded-lg px-4 py-2 @error('invoice_date') border-red-500 @enderror" placeholder="dd/mm/jjjj" value="{{ old('invoice_date') ? \Carbon\Carbon::parse(old('invoice_date'))->format('d/m/Y') : '' }}" required maxlength="10" autocomplete="off">
+                    @error('invoice_date')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Student</label>
-                    <select name="registration_id" id="registration_id" class="w-full border rounded-lg px-4 py-2" required>
+                    <select name="registration_id" id="registration_id" class="w-full border rounded-lg px-4 py-2 @error('registration_id') border-red-500 @enderror" required>
                         <option value="">Selecteer student</option>
                         @foreach($registrations as $registration)
                             <option value="{{ $registration->id }}"
@@ -37,35 +44,53 @@
                         @endforeach
                     </select>
                     <div id="student_name_display" class="mt-2 text-gray-600 hidden"></div>
+                    @error('registration_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Status</label>
-                    <select name="invoice_status" class="w-full border rounded-lg px-4 py-2" required>
+                    <select name="invoice_status" class="w-full border rounded-lg px-4 py-2 @error('invoice_status') border-red-500 @enderror" required>
                         <option value="Pending" {{ old('invoice_status') == 'Pending' ? 'selected' : '' }}>In Behandeling</option>
                         <option value="Paid" {{ old('invoice_status') == 'Paid' ? 'selected' : '' }}>Betaald</option>
                         <option value="Overdue" {{ old('invoice_status') == 'Overdue' ? 'selected' : '' }}>Te Laat</option>
                     </select>
+                    @error('invoice_status')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Bedrag excl. BTW</label>
-                    <input type="number" step="0.01" name="amount_excl_vat" id="amount_excl_vat" class="w-full border rounded-lg px-4 py-2" value="{{ old('amount_excl_vat') }}" required>
+                    <input type="number" step="0.01" name="amount_excl_vat" id="amount_excl_vat" class="w-full border rounded-lg px-4 py-2 @error('amount_excl_vat') border-red-500 @enderror" value="{{ old('amount_excl_vat') }}" required>
+                    @error('amount_excl_vat')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">BTW (%)</label>
-                    <input type="number" name="vat" id="vat" class="w-full border rounded-lg px-4 py-2 bg-gray-100" value="21" readonly>
+                    <input type="number" name="vat" id="vat" class="w-full border rounded-lg px-4 py-2 bg-gray-100 @error('vat') border-red-500 @enderror" value="21" readonly>
+                    @error('vat')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Bedrag incl. BTW</label>
-                    <input type="number" step="0.01" name="amount_incl_vat" id="amount_incl_vat" class="w-full border rounded-lg px-4 py-2 bg-gray-100" value="{{ old('amount_incl_vat') }}" readonly required>
+                    <input type="number" step="0.01" name="amount_incl_vat" id="amount_incl_vat" class="w-full border rounded-lg px-4 py-2 bg-gray-100 @error('amount_incl_vat') border-red-500 @enderror" value="{{ old('amount_incl_vat') }}" readonly required>
+                    @error('amount_incl_vat')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             <div class="mb-6">
                 <label class="block text-gray-700 font-semibold mb-2">Opmerking</label>
-                <textarea name="remark" class="w-full border rounded-lg px-4 py-2" rows="3" placeholder="Opmerking (optioneel)">{{ old('remark') }}</textarea>
+                <textarea name="remark" class="w-full border rounded-lg px-4 py-2 @error('remark') border-red-500 @enderror" rows="3" placeholder="Opmerking (optioneel)">{{ old('remark') }}</textarea>
+                @error('remark')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="flex justify-end gap-4 mt-8">

@@ -67,7 +67,16 @@ class InvoiceController extends Controller
     public function create()
     {
         $registrations = \App\Models\Registration::with('student.user')->get();
-        return view('invoices.create', compact('registrations'));
+
+        // Generate next invoice number
+        $lastInvoice = \DB::table('invoices')->orderByDesc('id')->first();
+        $nextNumber = 1;
+        if ($lastInvoice && preg_match('/INV-(\d+)/i', $lastInvoice->invoice_number, $matches)) {
+            $nextNumber = intval($matches[1]) + 1;
+        }
+        $nextInvoiceNumber = 'INV-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        return view('invoices.create', compact('registrations', 'nextInvoiceNumber'));
     }
 
     /**
