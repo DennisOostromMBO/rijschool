@@ -7,9 +7,11 @@ BEGIN
         invoices.invoice_number,
         invoices.invoice_date,
         invoices.invoice_status,
-        invoices.amount_excl_vat, -- Include this column
-        invoices.vat, -- Include VAT if needed
+        invoices.amount_excl_vat,
+        invoices.vat,
         invoices.amount_incl_vat,
+        invoices.remark, -- Make sure this line is present!
+        invoices.registration_id, -- Also needed for edit
         users.full_name AS student_name
     FROM invoices
     JOIN registrations ON invoices.registration_id = registrations.id

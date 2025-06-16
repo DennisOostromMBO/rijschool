@@ -13,7 +13,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Factuurnummer</label>
-                    <input type="text" name="invoice_number" class="w-full border rounded-lg px-4 py-2 @error('invoice_number') border-red-500 @enderror" value="{{ old('invoice_number', $invoice->invoice_number) }}" required>
+                    <input type="text" name="invoice_number" class="w-full border rounded-lg px-4 py-2 @error('invoice_number') border-red-500 @enderror" value="{{ old('invoice_number', $invoice->invoice_number) }}" required readonly>
                     @error('invoice_number')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -30,15 +30,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Student/Inschrijving</label>
-                    <select name="registration_id" id="registration_id" class="w-full border rounded-lg px-4 py-2 @error('registration_id') border-red-500 @enderror" required>
-                        <option value="">Selecteer student</option>
-                        @foreach($registrations as $registration)
-                            <option value="{{ $registration->id }}"
-                                {{ (string)old('registration_id', $invoice->registration_id) === (string)$registration->id ? 'selected' : '' }}>
-                                {{ $registration->student && $registration->student->user ? $registration->student->user->full_name : 'Onbekend' }}
-                            </option>
-                        @endforeach
-                    </select>
+                    @php
+                        // Support both stdClass (from SP) and Eloquent model
+                        $regId = isset($invoice->registration_id) ? $invoice->registration_id : (isset($invoice->registration_ID) ? $invoice->registration_ID : null);
+                        $selectedRegistration = $registrations->first(function($reg) use ($regId) {
+                            return (string)$reg->id === (string)$regId;
+                        });
+                        $studentName = $selectedRegistration && $selectedRegistration->student && $selectedRegistration->student->user
+                            ? $selectedRegistration->student->user->full_name
+                            : 'Onbekend';
+                    @endphp
+                    <input type="text" class="w-full border rounded-lg px-4 py-2 bg-gray-100" value="{{ $studentName }}" readonly>
+                    <input type="hidden" name="registration_id" value="{{ old('registration_id', $regId) }}">
                     @error('registration_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -82,7 +85,7 @@
 
             <div class="mb-6">
                 <label class="block text-gray-700 font-semibold mb-2">Opmerking</label>
-                <textarea name="remark" class="w-full border rounded-lg px-4 py-2 @error('remark') border-red-500 @enderror" rows="3" placeholder="Opmerking (optioneel)">{{ old('remark', $invoice->remark) }}</textarea>
+                <textarea name="remark" class="w-full border rounded-lg px-4 py-2 @error('remark') border-red-500 @enderror" rows="3" placeholder="Opmerking (optioneel)">{{ old('remark', isset($invoice->remark) ? $invoice->remark : '') }}</textarea>
                 @error('remark')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror

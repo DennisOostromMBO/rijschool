@@ -134,28 +134,36 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified invoice.
      */
-    public function edit(Invoice $invoice)
+    public function edit($id)
     {
-        $students = Student::with('user')->get();
-        $registrations = $invoice->student_id ?
-            Registration::where('student_id', $invoice->student_id)->with('package')->get() :
-            collect();
+        // Get all invoices via SP and find the one to edit
+        $invoices = collect(\App\Models\Invoice::getInvoicesFromSP());
+        $invoice = $invoices->firstWhere('id', $id);
 
-        return view('invoices.edit', compact('invoice', 'students', 'registrations'));
+        if (!$invoice) {
+            abort(404, 'Factuur niet gevonden.');
+        }
+
+        // Get registrations for the dropdown
+        $registrations = \App\Models\Registration::with('student.user')->get();
+
+        return view('invoices.edit', compact('invoice', 'registrations'));
     }
 
     /**
      * Update the specified invoice in storage.
      */
-    public function update(Request $request, Invoice $invoice)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'amount' => ['required', 'numeric', 'min:0'],
-            'due_date' => ['required', 'date'],
-            'status' => ['required', 'in:pending,paid,cancelled,overdue'],
-            'description' => ['required', 'string'],
-            'registration_id' => ['nullable', 'exists:registrations,id'],
-            'notes' => ['nullable', 'string'],
+            'invoice_number' => ['required', 'string', 'max:255', 'unique:invoices,invoice_number,' . $id],
+            'invoice_date' => ['required', 'date'],
+            'registration_id' => ['required', 'exists:registrations,id'],
+            'invoice_status' => ['required', 'in:Pending,Paid,Overdue'],
+            'amount_excl_vat' => ['required', 'numeric', 'min:0'],
+            'vat' => ['required', 'numeric', 'min:0'],
+            'amount_incl_vat' => ['required', 'numeric', 'min:0'],
+            'remark' => ['nullable', 'string'],
         ]);
 
         // Unhappy path: Check for existing pending/overdue invoice for this registration (excluding current invoice)
@@ -163,7 +171,7 @@ class InvoiceController extends Controller
             $exists = \DB::table('invoices')
                 ->where('registration_id', $validated['registration_id'])
                 ->whereIn('invoice_status', ['Pending', 'Overdue'])
-                ->where('id', '!=', $invoice->id)
+                ->where('id', '!=', $id)
                 ->exists();
 
             if ($exists) {
@@ -173,6 +181,8 @@ class InvoiceController extends Controller
             }
         }
 
+        // Find the invoice as Eloquent model for update
+        $invoice = Invoice::findOrFail($id);
         $invoice->update($validated);
 
         return redirect()->route('invoices.index')
