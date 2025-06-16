@@ -105,4 +105,26 @@ class Invoice extends Model
             $data['remark'] ?? null,
         ]);
     }
+
+    /**
+     * Call the stored procedure to update an invoice.
+     *
+     * @param int $id
+     * @param array $data
+     * @return void
+     */
+    public static function updateInvoiceWithSP($id, array $data)
+    {
+        DB::statement('CALL UpdateInvoice(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $id,
+            $data['invoice_number'],
+            $data['invoice_date'],
+            $data['registration_id'],
+            $data['invoice_status'],
+            $data['amount_excl_vat'],
+            $data['vat'],
+            $data['amount_incl_vat'],
+            $data['remark'] ?? null,
+        ]);
+    }
 }

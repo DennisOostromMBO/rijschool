@@ -38,7 +38,17 @@
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Student/Inschrijving</label>
                     @php
-                        $regId = isset($invoice->registration_id) ? $invoice->registration_id : (isset($invoice->registration_ID) ? $invoice->registration_ID : null);
+                        // Defensive: get registration id from $invoice or fallback to $selectedRegistration
+                        $regId = null;
+                        if (old('registration_id')) {
+                            $regId = old('registration_id');
+                        } elseif (isset($invoice->registration_id)) {
+                            $regId = $invoice->registration_id;
+                        } elseif (isset($invoice->registrationID)) {
+                            $regId = $invoice->registrationID;
+                        } elseif (isset($invoice->registration_Id)) {
+                            $regId = $invoice->registration_Id;
+                        }
                         $selectedRegistration = null;
                         foreach ($registrations as $reg) {
                             if ((string)$reg->id === (string)$regId) {
@@ -56,7 +66,7 @@
                         value="{{ $studentName }}" 
                         readonly 
                         title="Dit veld kan niet worden aangepast">
-                    <input type="hidden" name="registration_id" value="{{ old('registration_id', $regId) }}">
+                    <input type="hidden" name="registration_id" value="{{ $regId }}">
                     @error('registration_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror

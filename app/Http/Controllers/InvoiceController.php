@@ -144,15 +144,19 @@ class InvoiceController extends Controller
             abort(404, 'Factuur niet gevonden.');
         }
 
+        // Make sure registration_id is present and correct type
+        if (!isset($invoice->registration_id) && isset($invoice->registrationID)) {
+            $invoice->registration_id = $invoice->registrationID;
+        } elseif (!isset($invoice->registration_id) && isset($invoice->registration_Id)) {
+            $invoice->registration_id = $invoice->registration_Id;
+        }
+
         // Get registrations for the dropdown
         $registrations = \App\Models\Registration::with('student.user')->get();
 
         return view('invoices.edit', compact('invoice', 'registrations'));
     }
 
-    /**
-     * Update the specified invoice in storage.
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -181,9 +185,8 @@ class InvoiceController extends Controller
             }
         }
 
-        // Find the invoice as Eloquent model for update
-        $invoice = Invoice::findOrFail($id);
-        $invoice->update($validated);
+        // Call the stored procedure to update the invoice via the model
+        \App\Models\Invoice::updateInvoiceWithSP($id, $validated);
 
         return redirect()->route('invoices.index')
             ->with('success', 'Invoice updated successfully.');
