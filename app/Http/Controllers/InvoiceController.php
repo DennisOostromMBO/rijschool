@@ -158,6 +158,21 @@ class InvoiceController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
+        // Unhappy path: Check for existing pending/overdue invoice for this registration (excluding current invoice)
+        if (!empty($validated['registration_id'])) {
+            $exists = \DB::table('invoices')
+                ->where('registration_id', $validated['registration_id'])
+                ->whereIn('invoice_status', ['Pending', 'Overdue'])
+                ->where('id', '!=', $invoice->id)
+                ->exists();
+
+            if ($exists) {
+                return back()
+                    ->withErrors(['registration_id' => 'Er bestaat al een openstaande factuur voor deze inschrijving.'])
+                    ->withInput();
+            }
+        }
+
         $invoice->update($validated);
 
         return redirect()->route('invoices.index')
