@@ -4,7 +4,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+//Route::middleware('auth')->group(function () {
     // Invoice Management Routes
     Route::prefix('invoices')->name('invoices.')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('index');
@@ -35,5 +35,5 @@ Route::middleware('auth')->group(function () {
         Route::get('/student/{student}', [PaymentController::class, 'studentPayments'])->name('student');
         Route::get('/reports', [PaymentController::class, 'reports'])->name('reports');
     });
-});
+//});
 

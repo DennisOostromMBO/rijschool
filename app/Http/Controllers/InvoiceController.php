@@ -66,8 +66,8 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $students = Student::with('user')->get();
-        return view('invoices.create', compact('students'));
+        $registrations = \App\Models\Registration::with('student.user')->get();
+        return view('invoices.create', compact('registrations'));
     }
 
     /**
@@ -76,29 +76,19 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => ['required', 'exists:students,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
-            'due_date' => ['required', 'date', 'after_or_equal:today'],
-            'description' => ['required', 'string'],
-            'registration_id' => ['nullable', 'exists:registrations,id'],
-            'notes' => ['nullable', 'string'],
+            'registration_id' => ['required', 'exists:registrations,id'],
+            'invoice_number' => ['required', 'string', 'max:255'],
+            'invoice_date' => ['required', 'date'],
+            'amount_excl_vat' => ['required', 'numeric', 'min:0'],
+            'vat' => ['required', 'numeric', 'min:0'],
+            'amount_incl_vat' => ['required', 'numeric', 'min:0'],
+            'invoice_status' => ['required', 'in:Pending,Paid,Overdue'],
+            'remark' => ['nullable', 'string'],
         ]);
 
-        // Generate invoice number
-        $lastInvoice = Invoice::orderBy('id', 'desc')->first();
-        $invoiceNumber = 'INV-' . date('Y') . '-' . str_pad(($lastInvoice ? ($lastInvoice->id + 1) : 1), 4, '0', STR_PAD_LEFT);
+        $validated['is_active'] = 1;
 
-        // Create the invoice
-        $invoice = Invoice::create([
-            'student_id' => $validated['student_id'],
-            'invoice_number' => $invoiceNumber,
-            'amount' => $validated['amount'],
-            'due_date' => $validated['due_date'],
-            'status' => 'pending',
-            'description' => $validated['description'],
-            'registration_id' => $validated['registration_id'] ?? null,
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        \App\Models\Invoice::createInvoiceWithSP($validated);
 
         return redirect()->route('invoices.index')
             ->with('success', 'Invoice created successfully.');

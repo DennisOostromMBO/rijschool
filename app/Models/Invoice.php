@@ -84,4 +84,25 @@ class Invoice extends Model
     {
         return DB::select('CALL GetInvoices()');
     }
+
+    /**
+     * Call the stored procedure to create an invoice.
+     *
+     * @param array $data
+     * @return void
+     */
+    public static function createInvoiceWithSP(array $data)
+    {
+        DB::statement('CALL CreateInvoice(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $data['registration_id'],
+            $data['invoice_number'],
+            $data['invoice_date'],
+            $data['amount_excl_vat'],
+            $data['vat'],
+            $data['amount_incl_vat'],
+            $data['invoice_status'],
+            $data['is_active'] ?? 1,
+            $data['remark'] ?? null,
+        ]);
+    }
 }

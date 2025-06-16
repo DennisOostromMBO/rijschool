@@ -23,14 +23,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Student</label>
-                    <select name="registration_id" class="w-full border rounded-lg px-4 py-2" required>
+                    <select name="registration_id" id="registration_id" class="w-full border rounded-lg px-4 py-2" required>
                         <option value="">Selecteer student</option>
-                        @foreach(\App\Models\Registration::with('student.user')->get() as $registration)
-                            <option value="{{ $registration->id }}" {{ old('registration_id') == $registration->id ? 'selected' : '' }}>
-                                {{ $registration->student->user->name ?? 'Onbekend' }}
+                        @foreach($registrations as $registration)
+                            <option value="{{ $registration->id }}"
+                                data-student="{{ $registration->student && $registration->student->user ? $registration->student->user->name : 'Onbekend' }}"
+                                {{ old('registration_id') == $registration->id ? 'selected' : '' }}>
+                                {{ $registration->student && $registration->student->user ? $registration->student->user->name : 'Onbekend' }}
                             </option>
                         @endforeach
                     </select>
+                    <div id="student_name_display" class="mt-2 text-gray-600 hidden"></div>
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Status</label>
@@ -85,6 +88,24 @@
             document.getElementById('amount_excl_vat').addEventListener('input', calculateInclVat);
             // Initial calculation
             calculateInclVat();
+
+            // Student name display logic
+            function showStudentName() {
+                var select = document.getElementById('registration_id');
+                var selected = select.options[select.selectedIndex];
+                var name = selected.getAttribute('data-student') || '';
+                var display = document.getElementById('student_name_display');
+                if (name && select.value) {
+                    display.textContent = 'Geselecteerde student: ' + name;
+                    display.classList.remove('hidden');
+                } else {
+                    display.textContent = '';
+                    display.classList.add('hidden');
+                }
+            }
+            document.getElementById('registration_id').addEventListener('change', showStudentName);
+            // Initial display on page load
+            showStudentName();
         });
     </script>
 </x-layouts.app>
