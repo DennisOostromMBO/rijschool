@@ -10,8 +10,8 @@ BEGIN
         invoices.amount_excl_vat,
         invoices.vat,
         invoices.amount_incl_vat,
-        invoices.remark, -- Make sure this line is present!
-        invoices.registration_id, -- Also needed for edit
+        invoices.remark,
+        invoices.registration_id, -- Make sure this line is present and not commented out
         users.full_name AS student_name
     FROM invoices
     JOIN registrations ON invoices.registration_id = registrations.id

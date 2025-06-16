@@ -10,14 +10,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Load the stored procedure SQL from the file
-        $path = database_path('sp/daniel/sp_get_invoices.sql');
-        $path = database_path('sp/daniel/sp_create_invoices.sql');
-        $path = database_path('sp/daniel/sp_update_invoice.sql');
-        $sql = file_get_contents($path);
-
-        // Execute the SQL to create the stored procedure
-        DB::unprepared($sql);
+        // Load and execute all stored procedure SQL files
+        $spFiles = [
+            database_path('sp/daniel/sp_get_invoices.sql'),
+            database_path('sp/daniel/sp_create_invoices.sql'),
+            database_path('sp/daniel/sp_update_invoice.sql'),
+        ];
+        foreach ($spFiles as $path) {
+            if (file_exists($path)) {
+                $sql = file_get_contents($path);
+                DB::unprepared($sql);
+            }
+        }
     }
 
     /**
@@ -25,9 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop the stored procedure if it exists
         DB::unprepared('DROP PROCEDURE IF EXISTS GetInvoices');
-        DB::unprepared('DROP PROCEDURE IF EXISTS CreateInvoices');
-        DB::unprepared('DROP PROCEDURE IF EXISTS UpdateInvoices');
+        DB::unprepared('DROP PROCEDURE IF EXISTS CreateInvoice');
+        DB::unprepared('DROP PROCEDURE IF EXISTS UpdateInvoice');
     }
 };

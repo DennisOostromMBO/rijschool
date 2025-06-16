@@ -144,12 +144,13 @@ class InvoiceController extends Controller
             abort(404, 'Factuur niet gevonden.');
         }
 
-        // Make sure registration_id is present and correct type
-        if (!isset($invoice->registration_id) && isset($invoice->registrationID)) {
-            $invoice->registration_id = $invoice->registrationID;
-        } elseif (!isset($invoice->registration_id) && isset($invoice->registration_Id)) {
-            $invoice->registration_id = $invoice->registration_Id;
+        // Debug: check registration_id value and type
+        if (!isset($invoice->registration_id) || empty($invoice->registration_id)) {
+            abort(500, 'registration_id ontbreekt of is leeg in de SP-resultaten: ' . json_encode($invoice));
         }
+
+        // Make sure registration_id is an integer (sometimes it can be a string)
+        $invoice->registration_id = (int) $invoice->registration_id;
 
         // Get registrations for the dropdown
         $registrations = \App\Models\Registration::with('student.user')->get();
