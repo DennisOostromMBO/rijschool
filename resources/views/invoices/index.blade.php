@@ -16,6 +16,13 @@
         <div class="hidden sm:block">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Factuur Overzicht</h1>
 
+            <!-- Add button for creating a new invoice -->
+            <div class="mb-4 flex justify-end">
+                <a href="{{ route('invoices.create') }}" class="bg-black text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-900 transition">
+                    Nieuwe Factuur
+                </a>
+            </div>
+
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 text-center">
