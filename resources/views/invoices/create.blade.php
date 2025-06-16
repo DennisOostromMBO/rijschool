@@ -27,9 +27,9 @@
                         <option value="">Selecteer student</option>
                         @foreach($registrations as $registration)
                             <option value="{{ $registration->id }}"
-                                data-student="{{ $registration->student && $registration->student->user ? $registration->student->user->name : 'Onbekend' }}"
+                                data-student="{{ $registration->student && $registration->student->user ? $registration->student->user->full_name : 'Onbekend' }}"
                                 {{ old('registration_id') == $registration->id ? 'selected' : '' }}>
-                                {{ $registration->student && $registration->student->user ? $registration->student->user->name : 'Onbekend' }}
+                                {{ $registration->student && $registration->student->user ? $registration->student->user->full_name : 'Onbekend' }}
                             </option>
                         @endforeach
                     </select>
