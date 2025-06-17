@@ -46,4 +46,46 @@ class Payment extends Model
     {
         return DB::select('CALL GetPayments()');
     }
+
+    /**
+     * Call the stored procedure to create a payment.
+     *
+     * @param array $data
+     * @return void
+     */
+    public static function createPaymentWithSP(array $data)
+    {
+        DB::statement('CALL CreatePayment(?, ?, ?, ?, ?, ?, ?, ?)', [
+            $data['invoice_id'],
+            $data['date'],
+            $data['amount'],
+            $data['payment_method'],
+            $data['status'],
+            $data['is_active'] ?? 1,
+            $data['remark'] ?? null,
+            $data['reference_number'] ?? null,
+        ]);
+    }
+
+    /**
+     * Call the stored procedure to update a payment.
+     *
+     * @param int $id
+     * @param array $data
+     * @return void
+     */
+    public static function updatePaymentWithSP($id, array $data)
+    {
+        DB::statement('CALL UpdatePayment(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $id,
+            $data['invoice_id'],
+            $data['date'],
+            $data['amount'],
+            $data['payment_method'],
+            $data['status'],
+            $data['is_active'] ?? 1,
+            $data['remark'] ?? null,
+            $data['reference_number'] ?? null,
+        ]);
+    }
 }
