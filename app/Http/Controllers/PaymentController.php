@@ -72,22 +72,19 @@ class PaymentController extends Controller
     {
         $validated = $request->validate([
             'invoice_id' => ['required', 'exists:invoices,id'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
-            'payment_method' => ['required', 'in:cash,bank_transfer,credit_card,ideal,paypal'],
-            'payment_date' => ['required', 'date'],
-            'reference_number' => ['nullable', 'string', 'max:100'],
-            'notes' => ['nullable', 'string'],
+            'date' => ['required', 'date'],
+            'status' => ['required', 'in:open,paid,cancelled'],
+            'remark' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
         ]);
 
-        // Call the stored procedure to create the payment
-        \App\Models\Payment::createPaymentWithSP([
+        // Create the payment using Eloquent
+        \App\Models\Payment::create([
             'invoice_id' => $validated['invoice_id'],
-            'date' => $validated['payment_date'],
-            'amount' => $validated['amount'],
-            'payment_method' => $validated['payment_method'],
-            'status' => 'completed',
-            'remark' => $validated['notes'] ?? null,
-            'reference_number' => $validated['reference_number'] ?? null,
+            'date' => $validated['date'],
+            'status' => $validated['status'],
+            'remark' => $validated['remark'] ?? null,
+            'is_active' => $validated['is_active'] ?? 1,
         ]);
 
         return redirect()->route('payments.index')
