@@ -78,6 +78,14 @@ class PaymentController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
+        // Prevent duplicate payment for the same invoice
+        $existingPayment = \App\Models\Payment::where('invoice_id', $validated['invoice_id'])->first();
+        if ($existingPayment) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['invoice_id' => 'Er bestaat al een betaling voor deze factuur.']);
+        }
+
         // Create the payment using Eloquent
         \App\Models\Payment::create([
             'invoice_id' => $validated['invoice_id'],
