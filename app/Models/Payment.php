@@ -55,13 +55,12 @@ class Payment extends Model
      */
     public static function createPaymentWithSP(array $data)
     {
-        DB::statement('CALL CreatePayment(?, ?, ?, ?, ?, ?, ?, ?)', [
+        DB::statement('CALL CreatePayment(?, ?, ?, ?, ?, ?, ?)', [
             $data['invoice_id'],
             $data['date'],
             $data['amount'],
             $data['payment_method'],
             $data['status'],
-            $data['is_active'] ?? 1,
             $data['remark'] ?? null,
             $data['reference_number'] ?? null,
         ]);
@@ -89,3 +88,4 @@ class Payment extends Model
         ]);
     }
 }
+
