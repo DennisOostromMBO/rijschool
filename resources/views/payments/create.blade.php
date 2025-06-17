@@ -9,6 +9,8 @@
         <form method="POST" action="{{ route('payments.store') }}">
             @csrf
 
+            <input type="hidden" name="is_active" value="1" />
+
             <div class="mb-4">
                 <label class="block font-semibold mb-2">Factuur</label>
                 <select name="invoice_id" class="w-full border rounded-lg px-4 py-2 @error('invoice_id') border-red-500 @enderror" required>
@@ -25,48 +27,30 @@
             </div>
 
             <div class="mb-4">
-                <label class="block font-semibold mb-2">Bedrag</label>
-                <input type="number" step="0.01" name="amount" class="w-full border rounded-lg px-4 py-2 @error('amount') border-red-500 @enderror" value="{{ old('amount') }}" required>
-                @error('amount')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label class="block font-semibold mb-2">Betaalmethode</label>
-                <select name="payment_method" class="w-full border rounded-lg px-4 py-2 @error('payment_method') border-red-500 @enderror" required>
-                    <option value="">Selecteer methode</option>
-                    <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Contant</option>
-                    <option value="bank_transfer" {{ old('payment_method') == 'bank_transfer' ? 'selected' : '' }}>Overschrijving</option>
-                    <option value="credit_card" {{ old('payment_method') == 'credit_card' ? 'selected' : '' }}>Creditcard</option>
-                    <option value="ideal" {{ old('payment_method') == 'ideal' ? 'selected' : '' }}>iDEAL</option>
-                    <option value="paypal" {{ old('payment_method') == 'paypal' ? 'selected' : '' }}>PayPal</option>
+                <label class="block font-semibold mb-2">Status</label>
+                <select name="status" class="w-full border rounded-lg px-4 py-2 @error('status') border-red-500 @enderror" required>
+                    <option value="">Selecteer status</option>
+                    <option value="open" {{ old('status') == 'open' ? 'selected' : '' }}>Open</option>
+                    <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Betaald</option>
+                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Geannuleerd</option>
                 </select>
-                @error('payment_method')
+                @error('status')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="mb-4">
                 <label class="block font-semibold mb-2">Betaaldatum</label>
-                <input type="date" name="payment_date" class="w-full border rounded-lg px-4 py-2 @error('payment_date') border-red-500 @enderror" value="{{ old('payment_date', date('Y-m-d')) }}" required>
-                @error('payment_date')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label class="block font-semibold mb-2">Referentie</label>
-                <input type="text" name="reference_number" class="w-full border rounded-lg px-4 py-2 @error('reference_number') border-red-500 @enderror" value="{{ old('reference_number') }}">
-                @error('reference_number')
+                <input type="date" name="date" class="w-full border rounded-lg px-4 py-2 @error('date') border-red-500 @enderror" value="{{ old('date', date('Y-m-d')) }}" required>
+                @error('date')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="mb-4">
                 <label class="block font-semibold mb-2">Opmerking</label>
-                <textarea name="notes" class="w-full border rounded-lg px-4 py-2 @error('notes') border-red-500 @enderror" rows="3">{{ old('notes') }}</textarea>
-                @error('notes')
+                <textarea name="remark" class="w-full border rounded-lg px-4 py-2 @error('remark') border-red-500 @enderror" rows="3">{{ old('remark') }}</textarea>
+                @error('remark')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -82,3 +66,4 @@
         </form>
     </div>
 </x-layouts.app>
+

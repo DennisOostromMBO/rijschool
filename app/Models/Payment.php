@@ -23,6 +23,10 @@ class Payment extends Model
         'remark',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     /**
      * Get the invoice that this payment is for.
      */
@@ -58,8 +62,6 @@ class Payment extends Model
         DB::statement('CALL CreatePayment(?, ?, ?, ?, ?, ?, ?)', [
             $data['invoice_id'],
             $data['date'],
-            $data['amount'],
-            $data['payment_method'],
             $data['status'],
             $data['remark'] ?? null,
             $data['reference_number'] ?? null,
@@ -79,8 +81,6 @@ class Payment extends Model
             $id,
             $data['invoice_id'],
             $data['date'],
-            $data['amount'],
-            $data['payment_method'],
             $data['status'],
             $data['is_active'] ?? 1,
             $data['remark'] ?? null,
