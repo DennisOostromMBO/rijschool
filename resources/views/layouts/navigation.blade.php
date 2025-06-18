@@ -1,6 +1,6 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors duration-200">
+<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors duration-200 shadow-md">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-8 lg:px-12">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if(Auth::user() && Auth::user()->roles->pluck('name')->contains('Admin'))
+                        <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
+                            {{ __('Accounts') }}
+                        </x-nav-link>
+                    @endif
+                    <x-notification-bell />
                 </div>
             </div>
 
@@ -43,6 +49,34 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('notifications.index')">
+                            Notificaties
+                            @php $notificationCount = Auth::user()->getUnreadNotificationsCount(); @endphp
+                            @if($notificationCount > 0)
+                                <span class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                                    {{ $notificationCount > 99 ? '99+' : $notificationCount }}
+                                </span>
+                            @endif
+                        </x-dropdown-link>
+
+                        @if(Auth::user()->isInstructor())
+                        <x-dropdown-link :href="route('notifications.instructor-students')">
+                            Mijn Studenten
+                        </x-dropdown-link>
+                        @endif
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
                         @if (Auth::check())
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
@@ -88,6 +122,7 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-notification-bell mobile="true" />
         </div>
 
         <!-- Theme Toggle (Mobile) -->

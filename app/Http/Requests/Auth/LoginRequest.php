@@ -27,8 +27,26 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'username' => ['required', 'string', 'max:255', 'exists:users,username'],
+            'password' => ['required', 'string', 'min:8'],
+            'remember' => ['boolean'],
+        ];
+    }
+    
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'username.required' => 'Voer een gebruikersnaam in.',
+            'username.string' => 'Gebruikersnaam moet tekst zijn.',
+            'username.exists' => 'Deze gebruikersnaam bestaat niet.',
+            'password.required' => 'Voer een wachtwoord in.',
+            'password.string' => 'Wachtwoord moet tekst zijn.',
+            'password.min' => 'Wachtwoord moet minimaal :min tekens bevatten.',
         ];
     }
 
@@ -41,13 +59,28 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // First check if the account exists and is active before attempting authentication
+        $user = \App\Models\User::where('username', $this->username)->first();
+        if ($user && !$user->is_active) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages([
+                'username' => 'Dit account is niet actief. Neem contact op met een beheerder.',
+            ]);
+        }
+
+        if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'username' => 'De opgegeven inloggegevens komen niet overeen met onze gegevens.',
             ]);
         }
+
+        // Update the user's login status
+        Auth::user()->update([
+            'is_logged_in' => true,
+            'logged_in_at' => now(),
+        ]);
 
         RateLimiter::clear($this->throttleKey());
     }
@@ -59,7 +92,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 3)) {
             return;
         }
 
@@ -68,10 +101,8 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'username' => 'Te veel inlogpogingen. Probeer het opnieuw na ' . ceil($seconds / 60) . 
+                         ' ' . (ceil($seconds / 60) == 1 ? 'minuut' : 'minuten') . '.',
         ]);
     }
 
@@ -80,6 +111,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('username')).'|'.$this->ip());
     }
 }

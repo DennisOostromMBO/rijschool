@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Removing the user_id field as it contradicts the many-to-many relationship design
             $table->string('name');
             $table->boolean('is_active')->default(true);
             $table->text('remark')->nullable();

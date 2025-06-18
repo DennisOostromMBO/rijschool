@@ -1,15 +1,8 @@
-<?php
-// Empty file - will contain invoice management functionality
-?>
+@extends('layouts.app')
 
+@section('title', 'Factuur Overzicht')
 
-<x-layouts.app>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Factuur Overzicht') }}
-        </h2>
-    </x-slot>
-
+@section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Desktop version --}}
@@ -256,4 +249,4 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+@endsection

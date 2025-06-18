@@ -1,0 +1,33 @@
+/* Global fixes for blue buttons */
+.bg-blue-500,
+.bg-blue-600,
+.bg-blue-700,
+.bg-blue-800,
+.bg-blue-900 {
+    color: white !important;
+}
+
+.bg-blue-500 *,
+.bg-blue-600 *,
+.bg-blue-700 *,
+.bg-blue-800 *,
+.bg-blue-900 * {
+    color: white !important;
+}
+
+/* Force white text on hover */
+.hover\:bg-blue-500:hover,
+.hover\:bg-blue-600:hover,
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-800:hover,
+.hover\:bg-blue-900:hover {
+    color: white !important;
+}
+
+.hover\:bg-blue-500:hover *,
+.hover\:bg-blue-600:hover *,
+.hover\:bg-blue-700:hover *,
+.hover\:bg-blue-800:hover *,
+.hover\:bg-blue-900:hover * {
+    color: white !important;
+}

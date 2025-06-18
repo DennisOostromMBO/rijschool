@@ -11,7 +11,6 @@ class RolesTableSeeder extends Seeder
     {
         DB::table('roles')->insert([
             [
-                'user_id' => 1,
                 'name' => 'Admin',
                 'is_active' => true,
                 'remark' => 'Administrator role',
@@ -19,10 +18,16 @@ class RolesTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
                 'name' => 'Instructor',
                 'is_active' => true,
                 'remark' => 'Instructor role',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Student',
+                'is_active' => true,
+                'remark' => 'Student role',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

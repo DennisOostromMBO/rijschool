@@ -1,6 +1,4 @@
-<?php
-// Empty file - will contain payment processing and history functionality
-?>
+@extends('layouts.app')
 
 <x-layouts.app>
     <x-slot name="header">
@@ -8,8 +6,15 @@
             {{ __('Betalingen Overzicht') }}
         </h2>
     </x-slot>
+@section('title', 'Betalingen Overzicht')
 
+@section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Betalingen Overzicht') }}
+            </h2>
+        </x-slot>
 
         {{-- Desktop versie --}}
         <div class="hidden sm:block">
@@ -55,9 +60,9 @@
                         <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                         <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="">Alle</option>
-                            <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Betaald</option>
-                            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>In Behandeling</option>
-                            <option value="Failed" {{ request('status') == 'Failed' ? 'selected' : '' }}>Mislukt</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Betaald</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>In Behandeling</option>
+                            <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Mislukt</option>
                         </select>
                     </div>
                     <div>
@@ -100,7 +105,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
-                                        {{ $payment->status === 'Completed' ? 'bg-green-100 text-green-800' : ($payment->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                                        {{ $payment->status === 'completed' ? 'bg-green-100 text-green-800' : ($payment->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
                                         {{ ucfirst($payment->status ?? 'Onbekend') }}
                                     </span>
                                 </td>
@@ -191,9 +196,9 @@
                             <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                             <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="">Alle</option>
-                                <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Betaald</option>
-                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>In Behandeling</option>
-                                <option value="Failed" {{ request('status') == 'Failed' ? 'selected' : '' }}>Mislukt</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Betaald</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>In Behandeling</option>
+                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Mislukt</option>
                             </select>
                         </div>
                         <div class="mb-4">
@@ -214,7 +219,7 @@
                 @forelse($payments as $payment)
                     <div class="bg-white dark:bg-gray-800 rounded-xl border p-4 flex flex-col items-center shadow">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-2
-                            {{ $payment->status === 'Completed' ? 'bg-green-100 text-green-800' : ($payment->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                            {{ $payment->status === 'completed' ? 'bg-green-100 text-green-800' : ($payment->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
                             {{ ucfirst($payment->status ?? 'Onbekend') }}
                         </span>
                         <div class="text-xs text-gray-500">Betaler</div>
@@ -247,4 +252,4 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+@endsection
