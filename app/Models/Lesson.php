@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Lesson extends Model
 {
@@ -27,9 +28,9 @@ class Lesson extends Model
 
     protected $casts = [
         'start_date' => 'date',
-        'start_time' => 'time',
+        'start_time' => 'datetime',
         'end_date' => 'date',
-        'end_time' => 'time',
+        'end_time' => 'datetime',
         'is_active' => 'boolean',
     ];
 
@@ -40,7 +41,7 @@ class Lesson extends Model
 
     public function instructor()
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
     public function car()
@@ -66,5 +67,10 @@ class Lesson extends Model
     public function isCompleted()
     {
         return $this->lesson_status === 'completed';
+    }
+
+    public static function getLessonOverview()
+    {
+        return DB::select('CALL GetLessonOverview()');
     }
 }

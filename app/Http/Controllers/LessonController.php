@@ -16,18 +16,10 @@ class LessonController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Lesson::with(['student.user', 'instructor.user', 'instructor.car']);
+        $lessons = Lesson::getLessonOverview();
 
-        // Apply filters if provided
-        if ($request->has('date')) {
-            $query->whereDate('start_time', $request->date);
-        }
-
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-
-        $lessons = $query->orderBy('start_time')->paginate(15);
+        // Debugging: Uncomment to inspect the data
+        // dd($lessons);
 
         return view('lessons.index', compact('lessons'));
     }

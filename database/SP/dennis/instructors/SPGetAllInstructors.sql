@@ -1,15 +1,15 @@
 CREATE PROCEDURE SPGetAllInstructors()
 BEGIN
     SELECT 
-        users.first_name,
-        users.middle_name,
-        users.last_name,
-        users.birth_date,
-        contacts.full_address,
-        contacts.email,
-        instructors.number
-    FROM instructors
-    INNER JOIN users ON instructors.user_id = users.id
-    INNER JOIN contacts ON contacts.user_id = users.id
-    WHERE instructors.is_active = 1 AND contacts.is_active = 1;
+        user.first_name,
+        user.middle_name,
+        user.last_name,
+        user.birth_date,
+        cont.full_address,
+        cont.email,
+        inst.number
+    FROM instructors inst
+    INNER JOIN users user ON inst.user_id = user.id
+    INNER JOIN contacts cont ON cont.user_id = user.id
+    ORDER BY inst.id DESC;
 END;

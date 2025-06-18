@@ -1,15 +1,17 @@
 CREATE PROCEDURE SPGetAllStudents()
 BEGIN
     SELECT 
-        users.full_name,
-        users.birth_date,
-        students.relation_number,
-        contacts.full_address,
-        contacts.mobile,
-        contacts.email
-    FROM students
-    INNER JOIN users ON students.user_id = users.id
-    INNER JOIN contacts ON contacts.user_id = users.id;
+        user.full_name,
+        user.birth_date,
+        stud.relation_number,
+        cont.full_address,
+        cont.mobile,
+        cont.email,
+        (SELECT CONCAT(inst.first_name, ' ', COALESCE(inst.middle_name, ''), ' ', inst.last_name) 
+         FROM users inst 
+         WHERE inst.id = IF(stud.id % 2 = 0, 3, 4)) as instructor_name
+    FROM students stud
+    INNER JOIN users user ON stud.user_id = user.id
+    INNER JOIN contacts cont ON cont.user_id = user.id
+    ORDER BY stud.id DESC;
 END;
-
-

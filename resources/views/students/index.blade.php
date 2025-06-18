@@ -8,7 +8,7 @@
         @else
             <div></div>
         @endif
-        <a href="#" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
+        <a href="{{ route('students.create') }}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-flex items-center">
             ➕ Voeg Leerling Toe
         </a>
     </div>
@@ -23,7 +23,6 @@
                 <thead>
                     <tr class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 text-sm font-medium">
                         <th class="py-2 px-4 border">Naam</th>
-                        <th class="py-2 px-4 border">Geboortedatum</th>
                         <th class="py-2 px-4 border">Relatienummer</th>
                         <th class="py-2 px-4 border">Adres</th>
                         <th class="py-2 px-4 border">Mobiel</th>
@@ -36,7 +35,6 @@
                     @foreach ($students as $student)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="py-2 px-4 border">{{ $student->full_name }}</td>
-                            <td class="py-2 px-4 border">{{ $student->birth_date }}</td>
                             <td class="py-2 px-4 border">{{ $student->relation_number }}</td>
                             <td class="py-2 px-4 border">{{ $student->full_address }}</td>
                             <td class="py-2 px-4 border">{{ $student->mobile }}</td>
@@ -83,5 +81,10 @@
             @endforeach
         </div>
     @endif
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $students->links() }}
+    </div>
 </div>
 @endsection

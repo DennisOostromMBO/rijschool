@@ -28,6 +28,15 @@ class PackagesTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'type' => 'Package2',
+                'lesson_count' => 20,
+                'price_per_lesson' => 45.00,
+                'is_active' => true,
+                'remark' => 'Advanced package',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

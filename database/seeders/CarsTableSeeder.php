@@ -30,6 +30,47 @@ class CarsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'brand' => 'Toyota',
+                'type' => 'Corolla',
+                'license_plate' => 'AB-123-CD',
+                'fuel' => 'Gasoline',
+                'is_active' => true,
+                'remark' => 'Primary car',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'brand' => 'Toyota',
+                'type' => 'Corolla',
+                'license_plate' => 'AB-123-CD',
+                'fuel' => 'Gasoline',
+                'is_active' => true,
+                'remark' => 'Primary car',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'brand' => 'Toyota',
+                'type' => 'Corolla',
+                'license_plate' => 'AB-123-CD',
+                'fuel' => 'Gasoline',
+                'is_active' => true,
+                'remark' => 'Primary car',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'brand' => 'Toyota',
+                'type' => 'Corolla',
+                'license_plate' => 'AB-123-CD',
+                'fuel' => 'Gasoline',
+                'is_active' => true,
+                'remark' => 'Primary car',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            
         ]);
     }
 }
