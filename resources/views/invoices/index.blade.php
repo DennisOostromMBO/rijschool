@@ -9,6 +9,13 @@
         <div class="hidden sm:block">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Factuur Overzicht</h1>
 
+            <!-- Add button for creating a new invoice -->
+            <div class="mb-4 flex justify-end">
+                <a href="{{ route('invoices.create') }}" class="bg-black text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-900 transition">
+                    Nieuwe Factuur
+                </a>
+            </div>
+
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 text-center">
@@ -102,7 +109,24 @@
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <a href="{{ route('invoices.show', $invoice->id) }}" class="text-blue-500 hover:underline">Bekijken</a>
-                                    <a href="{{ route('invoices.edit', $invoice->id) }}" class="text-yellow-500 hover:underline ml-4">Bewerken</a>
+                                    @if(strtolower($invoice->invoice_status) === 'paid')
+                                        <span
+                                            class="text-yellow-300 cursor-not-allowed ml-4 relative group"
+                                            style="opacity: 0.6;"
+                                            title=""
+                                        >
+                                            Bewerken
+                                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto z-10">
+                                                Betaalde facturen kunnen niet meer bewerkt worden.
+                                            </span>
+                                        </span>
+                                    @else
+                                        <a href="{{ route('invoices.edit', $invoice->id) }}"
+                                           class="text-yellow-500 hover:underline ml-4"
+                                           title="Factuur bewerken">
+                                            Bewerken
+                                        </a>
+                                    @endif
                                     <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')

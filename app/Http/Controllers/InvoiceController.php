@@ -66,8 +66,17 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $students = Student::with('user')->get();
-        return view('invoices.create', compact('students'));
+        $registrations = \App\Models\Registration::with('student.user')->get();
+
+        // Generate next invoice number
+        $lastInvoice = \DB::table('invoices')->orderByDesc('id')->first();
+        $nextNumber = 1;
+        if ($lastInvoice && preg_match('/INV-(\d+)/i', $lastInvoice->invoice_number, $matches)) {
+            $nextNumber = intval($matches[1]) + 1;
+        }
+        $nextInvoiceNumber = 'INV-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        return view('invoices.create', compact('registrations', 'nextInvoiceNumber'));
     }
 
     /**
@@ -75,30 +84,48 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        // Convert invoice_date if in d/m/Y format
+        if ($request->has('invoice_date') && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $request->input('invoice_date'))) {
+            $date = \DateTime::createFromFormat('d/m/Y', $request->input('invoice_date'));
+            if ($date) {
+                $request->merge(['invoice_date' => $date->format('Y-m-d')]);
+            }
+        }
+
+        // Ensure invoice_number starts with INV-
+        if ($request->has('invoice_number')) {
+            $inv = $request->input('invoice_number');
+            if (stripos($inv, 'INV-') !== 0) {
+                $request->merge(['invoice_number' => 'INV-' . ltrim($inv, 'INV-')]);
+            }
+        }
+
         $validated = $request->validate([
-            'student_id' => ['required', 'exists:students,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
-            'due_date' => ['required', 'date', 'after_or_equal:today'],
-            'description' => ['required', 'string'],
-            'registration_id' => ['nullable', 'exists:registrations,id'],
-            'notes' => ['nullable', 'string'],
+            'registration_id' => ['required', 'exists:registrations,id'],
+            'invoice_number' => ['required', 'string', 'max:255', 'unique:invoices,invoice_number'],
+            'invoice_date' => ['required', 'date'],
+            'amount_excl_vat' => ['required', 'numeric', 'min:0'],
+            'vat' => ['required', 'numeric', 'min:0'],
+            'amount_incl_vat' => ['required', 'numeric', 'min:0'],
+            'invoice_status' => ['required', 'in:Pending,Paid,Overdue'],
+            'remark' => ['nullable', 'string'],
         ]);
 
-        // Generate invoice number
-        $lastInvoice = Invoice::orderBy('id', 'desc')->first();
-        $invoiceNumber = 'INV-' . date('Y') . '-' . str_pad(($lastInvoice ? ($lastInvoice->id + 1) : 1), 4, '0', STR_PAD_LEFT);
+        // Unhappy path: Check for existing pending/overdue invoice for this registration
+        $exists = \DB::table('invoices')
+            ->where('registration_id', $validated['registration_id'])
+            ->whereIn('invoice_status', ['Pending', 'Overdue'])
+            ->exists();
 
-        // Create the invoice
-        $invoice = Invoice::create([
-            'student_id' => $validated['student_id'],
-            'invoice_number' => $invoiceNumber,
-            'amount' => $validated['amount'],
-            'due_date' => $validated['due_date'],
-            'status' => 'pending',
-            'description' => $validated['description'],
-            'registration_id' => $validated['registration_id'] ?? null,
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        if ($exists) {
+            return back()
+                ->withErrors(['registration_id' => 'Er bestaat al een openstaande factuur voor deze inschrijving.'])
+                ->withInput();
+        }
+
+        $validated['is_active'] = 1;
+
+        \App\Models\Invoice::createInvoiceWithSP($validated);
 
         return redirect()->route('invoices.index')
             ->with('success', 'Invoice created successfully.');
@@ -123,31 +150,76 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified invoice.
      */
-    public function edit(Invoice $invoice)
+    public function edit($id)
     {
-        $students = Student::with('user')->get();
-        $registrations = $invoice->student_id ?
-            Registration::where('student_id', $invoice->student_id)->with('package')->get() :
-            collect();
+        // Get all invoices via SP and find the one to edit
+        $invoices = collect(\App\Models\Invoice::getInvoicesFromSP());
+        $invoice = $invoices->firstWhere('id', $id);
 
-        return view('invoices.edit', compact('invoice', 'students', 'registrations'));
+        if (!$invoice) {
+            abort(404, 'Factuur niet gevonden.');
+        }
+
+        // Debug: check registration_id value and type
+        if (!isset($invoice->registration_id) || empty($invoice->registration_id)) {
+            abort(500, 'registration_id ontbreekt of is leeg in de SP-resultaten: ' . json_encode($invoice));
+        }
+
+        // Make sure registration_id is an integer (sometimes it can be a string)
+        $invoice->registration_id = (int) $invoice->registration_id;
+
+        // Get registrations for the dropdown
+        $registrations = \App\Models\Registration::with('student.user')->get();
+
+        return view('invoices.edit', compact('invoice', 'registrations'));
     }
 
-    /**
-     * Update the specified invoice in storage.
-     */
-    public function update(Request $request, Invoice $invoice)
+    public function update(Request $request, $id)
     {
+        // Convert invoice_date if in d/m/Y format
+        if ($request->has('invoice_date') && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $request->input('invoice_date'))) {
+            $date = \DateTime::createFromFormat('d/m/Y', $request->input('invoice_date'));
+            if ($date) {
+                $request->merge(['invoice_date' => $date->format('Y-m-d')]);
+            }
+        }
+
+        // Ensure invoice_number starts with INV-
+        if ($request->has('invoice_number')) {
+            $inv = $request->input('invoice_number');
+            if (stripos($inv, 'INV-') !== 0) {
+                $request->merge(['invoice_number' => 'INV-' . ltrim($inv, 'INV-')]);
+            }
+        }
+
         $validated = $request->validate([
-            'amount' => ['required', 'numeric', 'min:0'],
-            'due_date' => ['required', 'date'],
-            'status' => ['required', 'in:pending,paid,cancelled,overdue'],
-            'description' => ['required', 'string'],
-            'registration_id' => ['nullable', 'exists:registrations,id'],
-            'notes' => ['nullable', 'string'],
+            'invoice_number' => ['required', 'string', 'max:255', 'unique:invoices,invoice_number,' . $id],
+            'invoice_date' => ['required', 'date'],
+            'registration_id' => ['required', 'exists:registrations,id'],
+            'invoice_status' => ['required', 'in:Pending,Paid,Overdue'],
+            'amount_excl_vat' => ['required', 'numeric', 'min:0'],
+            'vat' => ['required', 'numeric', 'min:0'],
+            'amount_incl_vat' => ['required', 'numeric', 'min:0'],
+            'remark' => ['nullable', 'string'],
         ]);
 
-        $invoice->update($validated);
+        // Unhappy path: Check for existing pending/overdue invoice for this registration (excluding current invoice)
+        if (!empty($validated['registration_id'])) {
+            $exists = \DB::table('invoices')
+                ->where('registration_id', $validated['registration_id'])
+                ->whereIn('invoice_status', ['Pending', 'Overdue'])
+                ->where('id', '!=', $id)
+                ->exists();
+
+            if ($exists) {
+                return back()
+                    ->withErrors(['registration_id' => 'Er bestaat al een openstaande factuur voor deze inschrijving.'])
+                    ->withInput();
+            }
+        }
+
+        // Call the stored procedure to update the invoice via the model
+        \App\Models\Invoice::updateInvoiceWithSP($id, $validated);
 
         return redirect()->route('invoices.index')
             ->with('success', 'Invoice updated successfully.');
