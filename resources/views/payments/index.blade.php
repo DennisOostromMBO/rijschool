@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+<x-layouts.app>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Betalingen Overzicht') }}
+        </h2>
+    </x-slot>
 @section('title', 'Betalingen Overzicht')
 
 @section('content')
@@ -13,6 +19,13 @@
         {{-- Desktop versie --}}
         <div class="hidden sm:block">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Betalingen Overzicht</h1>
+
+            <!-- Add button for creating a new payment -->
+            <div class="mb-4 flex justify-end">
+                <a href="{{ route('payments.create') }}" class="bg-black text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-900 transition">
+                    Nieuwe Betaling
+                </a>
+            </div>
 
             <!-- Statistiek-kaarten -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
@@ -75,6 +88,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Factuurdatum</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bedrag</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Acties</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -98,10 +112,44 @@
                                 <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
                                     €{{ number_format($payment->invoice->amount_incl_vat ?? 0, 2) }}
                                 </td>
+                                <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                                    <div class="relative inline-block text-left">
+                                        <button type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white dark:bg-gray-700 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none" id="menu-button-{{ $payment->id }}" aria-expanded="true" aria-haspopup="true" onclick="document.getElementById('dropdown-{{ $payment->id }}').classList.toggle('hidden')">
+                                            Acties
+                                            <svg class="-mr-1 ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7l3-3 3 3m0 6l-3 3-3-3"/>
+                                            </svg>
+                                        </button>
+                                        <div id="dropdown-{{ $payment->id }}" class="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 hidden z-10">
+                                            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button-{{ $payment->id }}">
+                                                <a href="{{ route('payments.edit', $payment->id) }}" class="block px-4 py-2 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem">
+                                                    Update
+                                                </a>
+                                                <form action="{{ route('payments.destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze betaling wilt verwijderen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="block w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        // Close dropdowns when clicking outside
+                                        document.addEventListener('click', function(event) {
+                                            var dropdown = document.getElementById('dropdown-{{ $payment->id }}');
+                                            var button = document.getElementById('menu-button-{{ $payment->id }}');
+                                            if (dropdown && !dropdown.contains(event.target) && !button.contains(event.target)) {
+                                                dropdown.classList.add('hidden');
+                                            }
+                                        });
+                                    </script>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen betalingen gevonden.</td>
+                                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Geen betalingen gevonden.</td>
                             </tr>
                         @endforelse
                     </tbody>

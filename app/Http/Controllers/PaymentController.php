@@ -27,12 +27,13 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        $invoices = Invoice::where('status', 'pending')
-            ->orWhere('status', 'overdue')
+        // Use invoice_status instead of status
+        $invoices = \App\Models\Invoice::where('invoice_status', 'Pending')
+            ->orWhere('invoice_status', 'Overdue')
             ->with('student.user')
             ->get();
 
-        $students = Student::with('user')->get();
+        $students = \App\Models\Student::with('user')->get();
 
         return view('payments.create', compact('invoices', 'students'));
     }
@@ -43,52 +44,29 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => ['required', 'exists:students,id'],
             'invoice_id' => ['required', 'exists:invoices,id'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
-            'payment_method' => ['required', 'in:cash,bank_transfer,credit_card,ideal,paypal'],
-            'payment_date' => ['required', 'date'],
-            'reference_number' => ['nullable', 'string', 'max:100'],
-            'notes' => ['nullable', 'string'],
+            'date' => ['required', 'date'],
+            'status' => ['required', 'in:open,paid,cancelled'],
+            'remark' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
         ]);
 
-        // Check if invoice belongs to the student
-        $invoice = Invoice::findOrFail($validated['invoice_id']);
-
-        if ($invoice->student_id != $validated['student_id']) {
-            return redirect()->back()->withInput()
-                ->with('error', 'The selected invoice does not belong to the selected student.');
+        // Prevent duplicate payment for the same invoice
+        $existingPayment = \App\Models\Payment::where('invoice_id', $validated['invoice_id'])->first();
+        if ($existingPayment) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['invoice_id' => 'Er bestaat al een betaling voor deze factuur.']);
         }
 
-        // Check if payment amount exceeds invoice amount
-        if ($validated['amount'] > $invoice->amount) {
-            return redirect()->back()->withInput()
-                ->with('error', 'Payment amount cannot exceed invoice amount.');
-        }
-
-        // Create the payment
-        DB::transaction(function () use ($validated, $invoice) {
-            // Create payment record
-            $payment = Payment::create([
-                'student_id' => $validated['student_id'],
-                'invoice_id' => $validated['invoice_id'],
-                'amount' => $validated['amount'],
-                'payment_method' => $validated['payment_method'],
-                'payment_date' => $validated['payment_date'],
-                'reference_number' => $validated['reference_number'] ?? null,
-                'notes' => $validated['notes'] ?? null,
-                'status' => 'completed',
-            ]);
-
-            // Update invoice status if payment covers full amount
-            $totalPaid = Payment::where('invoice_id', $invoice->id)
-                ->where('status', 'completed')
-                ->sum('amount');
-
-            if ($totalPaid >= $invoice->amount) {
-                $invoice->update(['status' => 'paid', 'paid_at' => now()]);
-            }
-        });
+        // Create the payment using Eloquent
+        \App\Models\Payment::create([
+            'invoice_id' => $validated['invoice_id'],
+            'date' => $validated['date'],
+            'status' => $validated['status'],
+            'remark' => $validated['remark'] ?? null,
+            'is_active' => $validated['is_active'] ?? 1,
+        ]);
 
         return redirect()->route('payments.index')
             ->with('success', 'Payment recorded successfully.');
@@ -294,6 +272,8 @@ class PaymentController extends Controller
     public function reports(Request $request)
     {
         $period = $request->query('period', 'month');
+        $startDate = null;
+        $endDate = null;
 
         switch ($period) {
             case 'week':
@@ -325,19 +305,21 @@ class PaymentController extends Controller
                 $endDate = now()->endOfMonth();
         }
 
+        // Defensive: if for some reason $startDate or $endDate is still null, set to now
+        if (!$startDate) $startDate = now()->startOfMonth();
+        if (!$endDate) $endDate = now()->endOfMonth();
+
         // Get total payments
         $totalPayments = Payment::whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->sum('amount');
 
-        // Get payments by method
         $paymentsByMethod = Payment::whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->select('payment_method', DB::raw('SUM(amount) as total'))
             ->groupBy('payment_method')
             ->get();
 
-        // Get daily payments
         $dailyPayments = Payment::whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->select(DB::raw('DATE(payment_date) as date'), DB::raw('SUM(amount) as total'))
@@ -351,3 +333,5 @@ class PaymentController extends Controller
         ));
     }
 }
+
+
