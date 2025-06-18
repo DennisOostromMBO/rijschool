@@ -84,6 +84,22 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        // Convert invoice_date if in d/m/Y format
+        if ($request->has('invoice_date') && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $request->input('invoice_date'))) {
+            $date = \DateTime::createFromFormat('d/m/Y', $request->input('invoice_date'));
+            if ($date) {
+                $request->merge(['invoice_date' => $date->format('Y-m-d')]);
+            }
+        }
+
+        // Ensure invoice_number starts with INV-
+        if ($request->has('invoice_number')) {
+            $inv = $request->input('invoice_number');
+            if (stripos($inv, 'INV-') !== 0) {
+                $request->merge(['invoice_number' => 'INV-' . ltrim($inv, 'INV-')]);
+            }
+        }
+
         $validated = $request->validate([
             'registration_id' => ['required', 'exists:registrations,id'],
             'invoice_number' => ['required', 'string', 'max:255', 'unique:invoices,invoice_number'],
@@ -160,6 +176,22 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Convert invoice_date if in d/m/Y format
+        if ($request->has('invoice_date') && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $request->input('invoice_date'))) {
+            $date = \DateTime::createFromFormat('d/m/Y', $request->input('invoice_date'));
+            if ($date) {
+                $request->merge(['invoice_date' => $date->format('Y-m-d')]);
+            }
+        }
+
+        // Ensure invoice_number starts with INV-
+        if ($request->has('invoice_number')) {
+            $inv = $request->input('invoice_number');
+            if (stripos($inv, 'INV-') !== 0) {
+                $request->merge(['invoice_number' => 'INV-' . ltrim($inv, 'INV-')]);
+            }
+        }
+
         $validated = $request->validate([
             'invoice_number' => ['required', 'string', 'max:255', 'unique:invoices,invoice_number,' . $id],
             'invoice_date' => ['required', 'date'],
