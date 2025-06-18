@@ -1,21 +1,9 @@
 @extends('layouts.app')
 
-<x-layouts.app>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Betalingen Overzicht') }}
-        </h2>
-    </x-slot>
 @section('title', 'Betalingen Overzicht')
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Betalingen Overzicht') }}
-            </h2>
-        </x-slot>
-
         {{-- Desktop versie --}}
         <div class="hidden sm:block">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Betalingen Overzicht</h1>

@@ -1,11 +1,12 @@
-<x-layouts.app>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+@extends('layouts.app')
+
+@section('title', 'Nieuwe Betaling')
+
+@section('content')
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-6">
             Nieuwe Betaling
         </h2>
-    </x-slot>
-
-    <div class="container mx-auto px-4 py-8">
         <form method="POST" action="{{ route('payments.store') }}">
             @csrf
 
@@ -65,5 +66,5 @@
             </div>
         </form>
     </div>
-</x-layouts.app>
+@endsection
 
