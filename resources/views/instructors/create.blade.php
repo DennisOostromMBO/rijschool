@@ -27,7 +27,7 @@
                 <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Voornaam</label>
                     <div class="mt-1">
-                        <input type="text" name="first_name" value="{{ old('first_name') }}" 
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" required
                             class="block w-full rounded-md @error('first_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('first_name')
@@ -49,7 +49,7 @@
                 <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Achternaam</label>
                     <div class="mt-1">
-                        <input type="text" name="last_name" value="{{ old('last_name') }}"
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" required
                             class="block w-full rounded-md @error('last_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('last_name')
@@ -61,7 +61,7 @@
             <div class="flex flex-col h-[85px]">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Geboortedatum</label>
                 <div class="mt-1">
-                    <input type="date" name="birth_date" value="{{ old('birth_date') }}"
+                    <input type="date" name="birth_date" value="{{ old('birth_date') }}" required
                         class="block w-full rounded-md @error('birth_date') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 </div>
                 @error('birth_date')
@@ -78,7 +78,7 @@
                 <div class="md:col-span-2 flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Straatnaam</label>
                     <div class="mt-1">
-                        <input type="text" name="street_name" value="{{ old('street_name') }}"
+                        <input type="text" name="street_name" value="{{ old('street_name') }}" required
                             class="block w-full rounded-md @error('street_name') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('street_name')
@@ -89,7 +89,7 @@
                 <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Huisnummer</label>
                     <div class="mt-1">
-                        <input type="text" name="house_number" value="{{ old('house_number') }}"
+                        <input type="text" name="house_number" value="{{ old('house_number') }}" required
                             class="block w-full rounded-md @error('house_number') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('house_number')
@@ -113,7 +113,7 @@
                 <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Postcode</label>
                     <div class="mt-1">
-                        <input type="text" name="postal_code" value="{{ old('postal_code') }}"
+                        <input type="text" name="postal_code" value="{{ old('postal_code') }}" required
                             class="block w-full rounded-md @error('postal_code') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('postal_code')
@@ -124,7 +124,7 @@
                 <div class="flex flex-col h-[85px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stad</label>
                     <div class="mt-1">
-                        <input type="text" name="city" value="{{ old('city') }}"
+                        <input type="text" name="city" value="{{ old('city') }}" required
                             class="block w-full rounded-md @error('city') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     @error('city')
@@ -141,7 +141,7 @@
             <div class="flex flex-col h-[85px]">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mailadres</label>
                 <div class="mt-1">
-                    <input type="email" name="email" value="{{ old('email') }}"
+                    <input type="email" name="email" value="{{ old('email') }}" required
                         class="block w-full rounded-md @error('email') border-red-500 @else border-gray-300 @enderror shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 </div>
                 @error('email')
